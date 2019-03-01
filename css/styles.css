@@ -1,6 +1,9 @@
 @charset "utf-8";
 /* CSS Document */
 
+html, body, section, main {
+  width: 100%;
+}
 body,td,th,p{
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 10pt;
@@ -131,6 +134,9 @@ nav h1 a {
 
 /* ====================== Restaurant Listing ====================== */
 #restaurants-list {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
   background-color: #f3f3f3;
   list-style: outside none none;
   margin: 0;
