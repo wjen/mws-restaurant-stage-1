@@ -159,6 +159,9 @@ nav h1 a {
   text-align: center;
 }
 #restaurants-list li {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   flex-grow: 1;
   background-color: #fff;
   border: 2px solid #ccc;
