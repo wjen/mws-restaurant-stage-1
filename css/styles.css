@@ -95,9 +95,10 @@ ul {
 .navigation .navigation__title {
  flex-grow: 1;
 }
-.navigation img {
+.navigation img{
   width: 48px;
   height: 48px;
+  background-color: white;
 }
 .navigation h1 a {
   color: #fff;
@@ -167,8 +168,15 @@ ul {
   height: 35px;
   letter-spacing: 0;
   margin: 10px;
-  padding: 0 10px;
+  padding: 10px;
   width: 200px;
+}
+.filter-label {
+  display: none;
+}
+
+.filter-section {
+  width: 100%;
 }
 
 /* ====================== Restaurant Listing ====================== */
@@ -359,13 +367,27 @@ ul {
     font-size: 2.6em;
   }
   .navigation img {
-  width: 30px;
-  height: 30px;
+    width: 30px;
+    height: 30px;
 }
 
 @media screen and (max-width: 540px) {
+
   .navigation h1 a{
     font-size: 1.7em;
+    display: inline-block;
+  }
+  .navigation img {
+    display: none;
+  }
+  .filter-options select {
+    width: 50%);
+  }
+
+}
+@media screen and (max-width: 450px) {
+  .filter-options select {
+    width: calc(100% - 24px);
+    margin: 10px;
   }
 }
-

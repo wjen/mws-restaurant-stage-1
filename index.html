@@ -12,25 +12,31 @@
 
 <body>
   <header>
-    <ul class="navigation" role="navigation">
-      <li><a href="/"><img src="img/rr-icon512.png" alt=""></a><li>
-      <li class="navigation__title"><h1><a href="/">Restaurant Reviews</a></h1></li>
-    </ul>
+    <nav>
+      <ul class="navigation" role="navigation">
+        <li><a title="home page" href="/"><img src="img/rr-icon512.png" alt="Restaurant Reviews logo"></a></li>
+        <li class="navigation__title"><h1><a title="home page" href="/">Restaurant Reviews</a></h1></li>
+      </ul>
+    </nav>
   </header>
 
   <main id="maincontent">
     <section id="map-container">
-      <div id="map"></div>
+      <div id="map" role="application" aria-hidden="true"></div>
     </section>
-    <section>
-      <div class="filter-options">
+    <section class="filter-section">
+      <div class="filter-options" aria-label="filter options for restaurants">
         <h2>Filter Results</h2>
-        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
+        <select id="neighborhoods-select" name="neighborhoods" aria-labelledby="neighborhoods-label" onchange="updateRestaurants()">
           <option value="all">All Neighborhoods</option>
         </select>
-        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
+        <label id="neighborhoods-label" class="filter-label">Filter by neighborhoods</label>
+
+
+        <select id="cuisines-select" name="cuisines" aria-labelledby="cuisines-label" onchange="updateRestaurants()">
           <option value="all">All Cuisines</option>
         </select>
+        <label id="cuisines-label" class="filter-label">Filter by cuisines</label>
       </div>
       <ul id="restaurants-list"></ul>
     </section>
