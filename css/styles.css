@@ -234,7 +234,7 @@ ul {
   display: block;
   margin: 0;
   max-width: 100%;
-  min-height: 248px;
+  max-height: 300px;
   min-width: 100%;
 }
 #restaurants-list li h1 {
