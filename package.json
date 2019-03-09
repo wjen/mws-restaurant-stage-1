@@ -17,12 +17,20 @@
   },
   "homepage": "https://github.com/wjen/mws-restaurant-stage-1#readme",
   "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^6.0.0"
   },
   "dependencies": {
     "browser-sync": "^2.26.3",
+    "compression": "^1.7.3",
+    "gulp-babel": "^8.0.0",
     "gulp-concat": "^2.6.1",
-    "gulp-sass": "^4.0.2"
+    "gulp-imagemin": "^5.0.3",
+    "gulp-sass": "^4.0.2",
+    "gulp-uglify": "^3.0.2",
+    "gulp-uglify-es": "^1.0.4",
+    "imagemin-pngquant": "^7.0.0"
   }
 }
