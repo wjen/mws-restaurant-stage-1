@@ -3,7 +3,6 @@ let restaurants,
   cuisines
 var newMap
 var markers = []
-
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
@@ -163,6 +162,7 @@ createRestaurantHTML = (restaurant) => {
   const div = document.createElement('div');
   image.className = 'restaurant-img';
   image.setAttribute('alt', restaurant.name);
+  console.log(restaurant);
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
   div.append(image);
   li.append(div);
