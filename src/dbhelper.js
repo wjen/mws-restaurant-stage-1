@@ -1,6 +1,7 @@
 /**
  * Common database helper functions.
  */
+
 class DBHelper {
 
   /**
@@ -16,28 +17,6 @@ class DBHelper {
    * Fetch all restaurants.
    */
 
-    //   fetch(fetchURL, {method: "GET"}).then(response => {
-    //   console.log(response);
-    //   response
-    //     .json()
-    //     .then(restaurants => {
-    //       if (restaurants.length) {
-    //         // Get all neighborhoods from all restaurants
-    //         const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood);
-    //         // Remove duplicates from neighborhoods
-    //         fetchedNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i);
-
-    //         // Get all cuisines from all restaurants
-    //         const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type);
-    //         // Remove duplicates from cuisines
-    //         fetchedCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i);
-    //       }
-
-    //       callback(null, restaurants);
-    //     });
-    // }).catch(error => {
-    //   callback(`Request failed. Returned ${error}`, null);
-    // });
 
   static fetchRestaurants(callback) {
     fetch(DBHelper.DATABASE_URL).then(function(response) {
@@ -45,19 +24,6 @@ class DBHelper {
         callback(null, restaurants);
       });
     });
-    // let xhr = new XMLHttpRequest();
-    // xhr.open('GET', DBHelper.DATABASE_URL);
-    // xhr.onload = () => {
-    //   if (xhr.status === 200) { // Got a success response from server!
-    //     const json = JSON.parse(xhr.responseText);
-    //     const restaurants = json.restaurants;
-    //     callback(null, restaurants);
-    //   } else { // Oops!. Got an error from server.
-    //     const error = (`Request failed. Returned status of ${xhr.status}`);
-    //     callback(error, null);
-    //   }
-    // };
-    // xhr.send();
   }
 
   /**
@@ -198,16 +164,9 @@ class DBHelper {
       marker.addTo(newMap);
     return marker;
   }
-  /* static mapMarkerForRestaurant(restaurant, map) {
-    const marker = new google.maps.Marker({
-      position: restaurant.latlng,
-      title: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
-      map: map,
-      animation: google.maps.Animation.DROP}
-    );
-    return marker;
-  } */
+
 
 }
+
+window.DBHelper = DBHelper;
 
