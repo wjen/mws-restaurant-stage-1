@@ -1,13 +1,18 @@
 module.exports = {
-  entry: [
-    './src/dbhelper.js',
-    './src/main.js',
-    './src/styles.css'
-  ],
+  entry: {
+     app: [
+      './src/dbhelper.js',
+      './src/main.js'
+     ],
+     restaurant: [
+      './src/dbhelper.js',
+      './src/restaurant_info.js'
+     ]
+  },
   output: {
     path: __dirname,
     publicPath: '/',
-    filename: 'bundle.js'
+    filename: '[name].bundle.js'
   },
   module: {
     rules: [
@@ -22,6 +27,12 @@ module.exports = {
             loader: "css-loader"
           }
         ]
+      },
+      {
+         test: /\.(png|svg|jpg|gif)$/,
+         use: [
+           'file-loader'
+         ]
       }
     ]
   }

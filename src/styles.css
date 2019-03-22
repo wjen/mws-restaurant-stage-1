@@ -115,7 +115,7 @@ ul {
 .navigation .navigation__title {
  flex-grow: 1;
 }
-.navigation img{
+.navigation img {
   width: 48px;
   height: 48px;
   background-color: white;
