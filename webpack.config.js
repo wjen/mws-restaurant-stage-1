@@ -1,19 +1,25 @@
+const resolve = require('path').resolve;
+
 module.exports = {
+  mode: 'development',
   entry: {
      app: [
-      './src/dbhelper.js',
-      './src/main.js'
+      './app/src/dbhelper.js',
+      './app/src/main.js'
      ],
      restaurant: [
-      './src/dbhelper.js',
-      './src/restaurant_info.js'
+      './app/src/dbhelper.js',
+      './app/src/restaurant_info.js'
      ]
   },
   output: {
-    path: __dirname,
-    publicPath: '/',
-    filename: '[name].bundle.js'
+    path: resolve('./'),
+    filename: './dist/[name].bundle.js'
   },
+  devtool: 'inline-source-map',
+   devServer: {
+     contentBase: './app'
+   },
   module: {
     rules: [
       { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" },
