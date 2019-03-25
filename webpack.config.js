@@ -13,12 +13,15 @@ module.exports = {
      ]
   },
   output: {
-    path: resolve('./'),
-    filename: './dist/[name].bundle.js'
+    path: resolve(__dirname, "app"),
+    filename: '[name].bundle.js'
   },
   devtool: 'inline-source-map',
    devServer: {
-     contentBase: './app'
+    publicPath: '/assets/',
+    contentBase: resolve(__dirname, "app"),
+    watchContentBase: true,
+    compress: true,
    },
   module: {
     rules: [
