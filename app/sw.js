@@ -21,3 +21,19 @@ self.addEventListener('install', event => {
   );
 });
 
+self.addEventListener('fetch', event => {
+  if(event.request.method === "GET") {
+    event.respondWith(
+      caches.match(event.request).then(response => {
+        return (response || fetch(event.request).then(fetchResponse => {
+          return caches.open(cacheID).then(cache => {
+             cache.put(event.request, fetchResponse.clone());
+             return fetchResponse;
+          });
+        }));
+      }).catch(error => {
+        console.log(error);
+      })
+    );
+  }
+});
