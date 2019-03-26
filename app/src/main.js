@@ -4,6 +4,7 @@ let restaurants,
 var newMap;
 var markers = [];
 import idb from 'idb';
+
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
