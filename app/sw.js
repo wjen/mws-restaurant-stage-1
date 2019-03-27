@@ -1,8 +1,21 @@
-const cacheID = 'mws';
+const cacheVersion = '2';
+const STATIC_CACHE = `static_cache-v${cacheVersion}`;
+const IMAGES_CACHE = `images_cache-v`;
+
+
+function isImageURL(url) {
+  let imgTypes = ["png", "jpg", "jpeg", "svg", "gif"];
+  let isImage = false;
+  for (let type of imgTypes) {
+    if (url.endsWith(type)) { isImage = true; break};
+  }
+  return isImage;
+}
+
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(cacheID).then(cache => {
+    caches.open(STATIC_CACHE).then(cache => {
       return cache.addAll([
         '/',
         '/src/main.js',
@@ -26,7 +39,8 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       caches.match(event.request).then(response => {
         return (response || fetch(event.request).then(fetchResponse => {
-          return caches.open(cacheID).then(cache => {
+          let useCache = isImageURL(event.request.url) ?  IMAGES_CACHE : STATIC_CACHE;
+          return caches.open(useCache).then(cache => {
              cache.put(event.request, fetchResponse.clone());
              return fetchResponse;
           });
@@ -35,5 +49,7 @@ self.addEventListener('fetch', event => {
         console.log(error);
       })
     );
+  } else {
+    event.respondWith( fetch(event.request) );
   }
 });
