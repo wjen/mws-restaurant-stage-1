@@ -3,8 +3,23 @@ let restaurants,
   cuisines
 var newMap;
 var markers = [];
-import idb from 'idb';
+import { openDB, deleteDB, wrap, unwrap } from 'idb';
 
+
+const dbPromise = openDB('rr-db', 1, {
+  upgrade(db) {
+    const store = db.createObjectStore('restaurants', { keyPath: 'id' });
+    store.createIndex('id', 'id');
+  }
+});
+// const dbPromise = idb.open('rr-db', 1, upgradeDB => {
+//   var restaurants_store = upgradeDB.createObjectStore('restaurants', { keyPath: 'id' });
+//   restaurants_store.createIndex('id', 'id');
+
+//   var reviews_store = upgradeDB.createObjectStore('reviews', { keyPath: 'id' });
+//   reviews_store.createIndex('id', 'id');
+//   reviews_store.createIndex('restaurant_id', 'restaurant_id');
+// });
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
