@@ -2,6 +2,15 @@ const cacheVersion = '2';
 const STATIC_CACHE = `static_cache-v${cacheVersion}`;
 const IMAGES_CACHE = `images_cache-v`;
 
+import { openDB, deleteDB, wrap, unwrap } from 'idb';
+
+console.log(openDB);
+const dbPromise = openDB('rr-db', 1, {
+  upgrade(db) {
+    const store = db.createObjectStore('restaurants', { keyPath: 'id' });
+    store.createIndex('id', 'id');
+  }
+});
 
 function isImageURL(url) {
   let imgTypes = ["png", "jpg", "jpeg", "svg", "gif"];
@@ -24,8 +33,6 @@ self.addEventListener('install', event => {
         '/index.html',
         '/src/restaurant_info.js',
         '/src/styles.css',
-        '/app.bundle.js',
-        '/restaurant.bundle.js',
         '/src/rr-icon512.png'
       ]).catch(error => {
         console.log('error opening cache' + error);

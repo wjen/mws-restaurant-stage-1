@@ -3,15 +3,7 @@ let restaurants,
   cuisines
 var newMap;
 var markers = [];
-import { openDB, deleteDB, wrap, unwrap } from 'idb';
 
-
-const dbPromise = openDB('rr-db', 1, {
-  upgrade(db) {
-    const store = db.createObjectStore('restaurants', { keyPath: 'id' });
-    store.createIndex('id', 'id');
-  }
-});
 // const dbPromise = idb.open('rr-db', 1, upgradeDB => {
 //   var restaurants_store = upgradeDB.createObjectStore('restaurants', { keyPath: 'id' });
 //   restaurants_store.createIndex('id', 'id');
@@ -182,7 +174,6 @@ const createRestaurantHTML = (restaurant) => {
   const div = document.createElement('div');
   image.className = 'restaurant-img';
   image.setAttribute('alt', restaurant.name);
-  console.log('HELLOO');
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
   console.log(image.src);
   div.append(image);
@@ -226,7 +217,5 @@ const addMarkersToMap = (restaurants = self.restaurants) => {
     }
     self.markers.push(marker);
   });
-
 }
-
 

@@ -12,7 +12,8 @@ module.exports = {
       './app/src/registration.js',
       './app/src/dbhelper.js',
       './app/src/restaurant_info.js'
-     ]
+     ],
+     serviceworker: './app/sw.js'
   },
   output: {
     path: resolve(__dirname, "app"),
