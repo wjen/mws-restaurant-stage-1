@@ -61,8 +61,7 @@ fetchRestaurantFromURL = (callback) => {
     console.log('self restaurant already fetched');
     return;
   }
-  console.log(self.restaurant);
-  console.log('did not use self.restaurant');
+
   const id = getParameterByName('id');
   if (!id) { // no id found in URL
     error = 'No restaurant id in URL'
