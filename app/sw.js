@@ -69,7 +69,6 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
-        console.log(cacheNames);
       Promise.all(
          cacheNames.map(cache => {
           if(!allCaches.includes(cache)) {
@@ -83,7 +82,10 @@ self.addEventListener('activate', event => {
 
 
 self.addEventListener('fetch', event => {
-  if(event.request.method === "GET") {
+  let checkUrl = new URL(event.request.url);
+  if (checkUrl.port === "1337") {
+    handleAJAXEvent(event);
+  } else if (event.request.method === "GET") {
     event.respondWith(
       caches.match(event.request).then(response => {
         return (response || fetch(event.request).then(fetchResponse => {
@@ -101,3 +103,47 @@ self.addEventListener('fetch', event => {
     event.respondWith( fetch(event.request) );
   }
 });
+
+const handleAJAXEvent = (event) => {
+  if(event.request.url.indexOf("restaurants") > -1) {
+    event.respondWith(
+      dbPromise.then( db => {
+        console.log('starting from idb');
+        return db
+          .transaction('restaurants')
+          .objectStore('restaurants')
+          .getAll();
+      }).then(data => {
+        console.log(data);
+        return (data.length && data || fetch(event.request)
+          .then( fetchResponse => {
+            console.log('still grabbing from fetch');
+            return fetchResponse.json();
+          }).catch(error => {
+            console.log(error);
+            reject(error);
+          })
+          .then( restaurants => {
+            console.log('fetched now storing');
+            return dbPromise.then(db => {
+              let tx = db.transaction('restaurants', 'readwrite');
+              let store = tx.objectStore('restaurants');
+              restaurants.forEach(function(restaurant){
+                store.put(restaurant);
+              });
+              return tx.done;
+            }).then( () => {
+              console.log('stored, now returning');
+              return restaurants;
+            });
+          })
+        )
+      })
+        .then(finalResponse => {
+          console.log(finalResponse);
+          return new Response(JSON.stringify(finalResponse));
+        }).catch(error => {
+          return new Response("Error fetching data", {status: 500});
+    })
+  )}
+}
