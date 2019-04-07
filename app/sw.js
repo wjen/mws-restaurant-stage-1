@@ -21,9 +21,28 @@ const dbPromise = openDB('rr-db', 2, {
   }
 });
 
-const getRestaurants = () => {
-
-}
+// const getRestaurants = (event) => {
+//   console.log(event.request);
+//   fetch(event.request)
+//     .then( fetchResponse => {
+//       console.log('still grabbing from fetch');
+//       return fetchResponse.json();
+//     }).catch(error => {
+//       console.log(error);
+//       reject(error);
+//     })
+// }
+  function getRestaurants(event) {
+    return new Promise(function(resolve, reject) {
+      fetch(event.request)
+      .then(resp => resp.json())
+      .then(json => { resolve(json); })
+      .catch(error => {
+        console.log(error);
+        reject(error);
+      });
+    });
+  }
 
 function isImageURL(url) {
   let imgTypes = ["png", "jpg", "jpeg", "svg", "gif"];
@@ -94,11 +113,11 @@ self.addEventListener('fetch', event => {
 
 const handleAJAXEvent = (event) => {
   // Only use for caching for Get events
-  if(event.request.method !== "GET") {
-    return fetch(event.request)
-      .then(response => response.json())
-      .then(json => json);
-  }
+  // if(event.request.method !== "GET") {
+  //   return fetch(event.request)
+  //     .then(response => response.json())
+  //     .then(json => json);
+  // }
 
   if(event.request.url.indexOf("restaurants") > -1) {
     event.respondWith(
@@ -110,14 +129,7 @@ const handleAJAXEvent = (event) => {
           .getAll();
       }).then(data => {
         console.log(data);
-        return ((data.length && data) || fetch(event.request)
-          .then( fetchResponse => {
-            console.log('still grabbing from fetch');
-            return fetchResponse.json();
-          }).catch(error => {
-            console.log(error);
-            reject(error);
-          })
+        return ((data.length && data) || getRestaurants(event)
           .then( restaurants => {
             console.log('fetched now storing');
             return dbPromise.then(db => {
