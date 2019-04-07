@@ -21,22 +21,10 @@ const dbPromise = openDB('rr-db', 2, {
   }
 });
 
-// const dbPromise = idb.open("fm-udacity-restaurant", 3, upgradeDB => {
-//   switch (upgradeDB.oldVersion) {
-//     case 0:
-//       upgradeDB.createObjectStore("restaurants", {keyPath: "id"});
-//     case 1:
-//       {
-//         const reviewsStore = upgradeDB.createObjectStore("reviews", {keyPath: "id"});
-//         reviewsStore.createIndex("restaurant_id", "restaurant_id");
-//       }
-//     case 2:
-//       upgradeDB.createObjectStore("pending", {
-//         keyPath: "id",
-//         autoIncrement: true
-//       });
-//   }
-// });
+const getRestaurants = () => {
+
+}
+
 function isImageURL(url) {
   let imgTypes = ["png", "jpg", "jpeg", "svg", "gif"];
   let isImage = false;
@@ -105,6 +93,13 @@ self.addEventListener('fetch', event => {
 });
 
 const handleAJAXEvent = (event) => {
+  // Only use for caching for Get events
+  if(event.request.method !== "GET") {
+    return fetch(event.request)
+      .then(response => response.json())
+      .then(json => json);
+  }
+
   if(event.request.url.indexOf("restaurants") > -1) {
     event.respondWith(
       dbPromise.then( db => {
@@ -115,7 +110,7 @@ const handleAJAXEvent = (event) => {
           .getAll();
       }).then(data => {
         console.log(data);
-        return (data.length && data || fetch(event.request)
+        return ((data.length && data) || fetch(event.request)
           .then( fetchResponse => {
             console.log('still grabbing from fetch');
             return fetchResponse.json();
