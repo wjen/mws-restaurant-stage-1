@@ -32,7 +32,7 @@ const dbPromise = openDB('rr-db', 2, {
 //       reject(error);
 //     })
 // }
-  function getRestaurants(event) {
+ const getRestaurants = (event) => {
     return new Promise(function(resolve, reject) {
       fetch(event.request)
       .then(resp => resp.json())
@@ -113,14 +113,21 @@ self.addEventListener('fetch', event => {
 
 const handleAJAXEvent = (event) => {
   // Only use for caching for Get events
-  // if(event.request.method !== "GET") {
-  //   return fetch(event.request)
-  //     .then(response => response.json())
-  //     .then(json => json);
-  // }
+  if(event.request.method !== "GET") {
+    return fetch(event.request)
+      .then(response => response.json())
+      .then(json => json);
+  }
 
   if(event.request.url.indexOf("restaurants") > -1) {
-    event.respondWith(
+    handleRestaurantEvents(event);
+  } else {
+    handleReviewsEvents(event);
+  }
+}
+
+const handleRestaurantEvents = (event) => {
+  event.respondWith(
       dbPromise.then( db => {
         console.log('starting from idb');
         return db
@@ -152,5 +159,5 @@ const handleAJAXEvent = (event) => {
         }).catch(error => {
           return new Response("Error fetching data", {status: 500});
     })
-  )}
+  )
 }
