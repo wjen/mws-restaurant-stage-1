@@ -13,7 +13,7 @@ class DBHelper {
     return `http://localhost:${port}/restaurants`;
   }
 
-  static get REVIEWS_URL() {
+  static get DATABASE_REVIEWS_URL() {
     const port = 1337 // Change this to your server port
     return `http://localhost:${port}/reviews`;
   }
@@ -31,6 +31,31 @@ class DBHelper {
     });
   }
 
+  static fetchReviews( restaurant_id, callback) {
+    let fetchURL = DBHelper.DATABASE_REVIEWS_URL + "/?restaurant_id=" + restaurant_id;
+    fetch(fetchURL).then( response => {
+      return response.json();
+    }).then(reviews => {
+        callback(null, reviews);
+      }).catch(error => {
+        callback(error, null);
+      });
+  }
+
+  //   static fetchRestaurantReviewsById(id, callback) {
+  //   // Fetch all reviews for the specific restaurant
+  //   const fetchURL = DBHelper.DATABASE_REVIEWS_URL + "/?restaurant_id=" + id;
+  //   fetch(fetchURL, {method: "GET"}).then(response => {
+  //     if (!response.clone().ok && !response.clone().redirected) {
+  //       throw "No reviews available";
+  //     }
+  //     response
+  //       .json()
+  //       .then(result => {
+  //         callback(null, result);
+  //       })
+  //   }).catch(error => callback(error, null));
+  // }
   /**
    * Fetch a restaurant by its ID.
    */

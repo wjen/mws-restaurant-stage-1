@@ -78,7 +78,6 @@ fetchRestaurantFromURL = (callback) => {
     });
   }
 }
-
 /**
  * Create restaurant HTML and add it to the webpage
  */
@@ -101,8 +100,11 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  DBHelper.fetchReviews(restaurant.id, (error, reviews) => {
+    fillReviewsHTML(reviews);
+  });
 }
+
 
 /**
  * Create restaurant operating hours HTML table and add it to the webpage.

@@ -90,8 +90,9 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   let checkUrl = new URL(event.request.url);
+  let id = checkUrl.searchParams.get('restaurant_id') - 0;
   if (checkUrl.port === "1337") {
-    handleAJAXEvent(event);
+    handleAJAXEvent(event, id);
   } else if (event.request.method === "GET") {
     event.respondWith(
       caches.match(event.request).then(response => {
@@ -111,7 +112,7 @@ self.addEventListener('fetch', event => {
   }
 });
 
-const handleAJAXEvent = (event) => {
+const handleAJAXEvent = (event, id) => {
   // Only use for caching for Get events
   if(event.request.method !== "GET") {
     return fetch(event.request)
@@ -122,7 +123,8 @@ const handleAJAXEvent = (event) => {
   if(event.request.url.indexOf("restaurants") > -1) {
     handleRestaurantEvents(event);
   } else {
-    handleReviewsEvents(event);
+    console.log('starting handling from reviews event')
+    handleReviewsEvents(event, id);
   }
 }
 
@@ -147,7 +149,7 @@ const handleRestaurantEvents = (event) => {
               });
               return tx.done;
             }).then( () => {
-              console.log('stored, now returning');
+              console.log('stored restaurants, now returning');
               return restaurants;
             });
           })
@@ -160,4 +162,42 @@ const handleRestaurantEvents = (event) => {
           return new Response("Error fetching data", {status: 500});
     })
   )
+}
+
+
+
+const handleReviewsEvents = (event, id) => {
+  event.respondWith(
+    dbPromise.then(db => {
+      return db
+        .transaction('reviews')
+        .objectStore('reviews')
+        .index("restaurant_id")
+        .getAll(id);
+    }).then( data => {
+      console.log(data);
+      return (data.length && data) || fetch(event.request)
+        .then(fetchResponse => {
+          return fetchResponse.json();
+        })
+        .then( reviews => {
+          console.log('using serviceworker fetch');
+          console.log('starting to store reviews');
+          return dbPromise.then(db => {
+            let tx = db.transaction('reviews', 'readwrite')
+            let store = tx.objectStore('reviews');
+            reviews.forEach(function(review) {
+              store.put(review);
+            });
+            return tx.done;
+          })
+          .then( () => reviews)
+        })
+    }).then(finalResponse => {
+        console.log(finalResponse);
+          return new Response(JSON.stringify(finalResponse));
+        }).catch(error => {
+          return new Response("Error fetching data", {status: 500});
+        }))
+
 }
