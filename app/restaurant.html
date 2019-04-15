@@ -39,7 +39,7 @@
     <!-- <label id="map-aria-description" class="map-aria-description">Leaflet Map Application</label> -->
     <!-- End map -->
     <!-- Beginning restaurant -->
-    <section id="restaurant-container">
+    <section id="restaurant-container" aria-label="Restaurant Details">
       <h1 id="restaurant-name"></h1>
       <img id="restaurant-img">
       <p id="restaurant-cuisine"></p>
@@ -48,8 +48,31 @@
     </section>
     <!-- end restaurant -->
     <!-- Beginning reviews -->
-    <section id="reviews-container">
+    <section id="reviews-container" aria-label="Reviews List">
       <ul id="reviews-list"></ul>
+    </section>
+    <!-- begin form for restaurant -->
+    <section id="reviews-form-container">
+      <form id="create-edit-review-form" aria-label="create/edit review form">
+        <h2 id="reviews-form-header"></h2>
+        <label for="name">
+          Name
+          <input type="text" id="name" class="reviews-input" placeholder="Type your name here">
+          <br>
+        </label>
+        <label for="rating">
+          Rating
+          <input type="number" id="rating" class="reviews-input"  placeholder="Enter a rating">
+          <br>
+        </label>
+        <label for="review">
+          Review
+          <textarea name="review-field" class="reviews-input" id="review-field" placeholder="Write a review" cols="30" rows="10"></textarea>
+          <br>
+        </label>
+      </form>
+      <button title="Submit form button" type="button" id="submit-form-btn" form="create-edit-review-form">Submit</button>
+      <button title="Submit form button" type="button" id="submit-form-btn">Submit</button>
     </section>
     <!-- End reviews -->
   </main>
