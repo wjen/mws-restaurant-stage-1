@@ -6,6 +6,9 @@ var newMap;
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   initMap();
+
+  submitBtn = document.getElementById('submit-form-btn');
+  submitBtn.addEventListener('click', submitReview);
 });
 
 /**
@@ -198,6 +201,10 @@ getParameterByName = (name, url) => {
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+const submitReview = () => {
+  let formData = getFormValues();
+
+}
 const getFormValues = () => {
   return {
     name: document.getElementById('name').value.trim(),
