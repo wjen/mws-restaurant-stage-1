@@ -57,22 +57,21 @@
         <h2 id="reviews-form-header"></h2>
         <label for="name">
           Name
-          <input type="text" id="name" class="reviews-input" placeholder="Type your name here">
+          <input type="text" id="name" class="reviews-input" placeholder="Type your name here" required>
           <br>
         </label>
         <label for="rating">
           Rating
-          <input type="number" id="rating" class="reviews-input"  placeholder="Enter a rating">
+          <input type="number" id="rating" class="reviews-input"  placeholder="Enter a rating" required>
           <br>
         </label>
         <label for="review">
           Review
-          <textarea name="review-field" class="reviews-input" id="review-field" placeholder="Write a review" cols="30" rows="10"></textarea>
+          <textarea name="review-field" class="reviews-input" id="review-field" placeholder="Write a review" cols="30" rows="10" required maxlength="100"></textarea>
           <br>
         </label>
       </form>
       <button title="Submit form button" type="button" id="submit-form-btn" form="create-edit-review-form">Submit</button>
-      <button title="Submit form button" type="button" id="submit-form-btn">Submit</button>
     </section>
     <!-- End reviews -->
   </main>
