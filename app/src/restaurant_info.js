@@ -203,6 +203,8 @@ getParameterByName = (name, url) => {
 
 const submitReview = () => {
   let formData = getFormValues();
+  console.log('hellio');
+  return
 
 }
 const getFormValues = () => {
