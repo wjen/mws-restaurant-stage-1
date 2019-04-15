@@ -197,3 +197,12 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+const getFormValues = () => {
+  return {
+    name: document.getElementById('name').value.trim(),
+    rating: document.getElementById('rating').value.trim(),
+    review: document.getElementById('review-field').value.trim()
+  }
+}
+
