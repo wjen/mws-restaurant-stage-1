@@ -203,7 +203,22 @@ getParameterByName = (name, url) => {
 
 const submitReview = () => {
   let formData = getFormValues();
-  console.log('hellio');
+  if(!/[a-zA-Z]{2,}$/gi.test(formData.name)) {
+    alert('name input must be letters only, minimum of 2 characters');
+    return;
+  }
+  if(!/[1-5]{1}$/gi.test(formData.rating)) {
+    alert('rating input must be a number, 1-5');
+    return;
+  }
+  if(formData.comments.length < 3) {
+    alert('comments input must be minimum of 3 characters');
+    return;
+  }
+  // if(!editing) {
+  //   formdata.restaurant_id = Number(getParameterByName('id'));
+  // }
+  console.log('submit review function');
   return
 
 }
