@@ -218,6 +218,10 @@ const submitReview = () => {
   // if(!editing) {
   //   formdata.restaurant_id = Number(getParameterByName('id'));
   // }
+
+  DBHelper.saveNewReview(self.restaurant.id, formData, (error, review)) => {
+    console.log(review);
+  }
   console.log('submit review function');
   return
 

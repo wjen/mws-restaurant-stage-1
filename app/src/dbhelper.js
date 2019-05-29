@@ -184,7 +184,7 @@ class DBHelper {
   /**
    * Map marker for a restaurant.
    */
-   static mapMarkerForRestaurant(restaurant, map) {
+  static mapMarkerForRestaurant(restaurant, map) {
     // https://leafletjs.com/reference-1.3.0.html#marker
     const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
       {title: restaurant.name,
@@ -195,6 +195,11 @@ class DBHelper {
     return marker;
   }
 
+  static saveNewReview(id, formData, callback) {
+    // Block any more clicks on the submit button until the callback
+    const btn = document.getElementById("submit-form-btn");
+    btn.onclick = null;
+  }
 
 }
 
