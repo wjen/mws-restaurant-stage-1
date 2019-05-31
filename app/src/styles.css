@@ -378,7 +378,7 @@ ul {
   display: block;
   margin: 0 auto;
   border: 1px solid gray;
-  min-height: 8vh;
+  padding: 5px;
   width: 50%;
 }
 

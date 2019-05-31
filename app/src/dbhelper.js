@@ -195,10 +195,22 @@ class DBHelper {
     return marker;
   }
 
-  static saveNewReview(id, formData, callback) {
+  static saveNewReview(formData, callback) {
     // Block any more clicks on the submit button until the callback
-    const btn = document.getElementById("submit-form-btn");
-    btn.onclick = null;
+    // const btn = document.getElementById("submit-form-btn");
+    // btn.onclick = null;
+    fetch('http://localhost:1337/reviews/', {
+      method: 'POST',
+      body: JSON.stringify(formData)
+    }).then(response => {
+      return response.json();
+    }).then( j => {
+      callback(null, j);
+    }).catch(error => {
+      console.log(error);
+    });
+
+
   }
 
 }

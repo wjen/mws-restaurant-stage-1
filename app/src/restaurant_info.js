@@ -202,6 +202,8 @@ getParameterByName = (name, url) => {
 }
 
 const submitReview = () => {
+  console.log('submit review function');
+
   let formData = getFormValues();
   if(!/[a-zA-Z]{2,}$/gi.test(formData.name)) {
     alert('name input must be letters only, minimum of 2 characters');
@@ -216,21 +218,20 @@ const submitReview = () => {
     return;
   }
   // if(!editing) {
-  //   formdata.restaurant_id = Number(getParameterByName('id'));
+    formData.restaurant_id = self.restaurant.id;
   // }
-
-  DBHelper.saveNewReview(self.restaurant.id, formData, (error, review)) => {
-    console.log(review);
-  }
-  console.log('submit review function');
+  DBHelper.saveNewReview(formData, (error, result) => {
+    console.log(result);
+    console.log('review saved');
+  });
   return
-
 }
+
 const getFormValues = () => {
   return {
     name: document.getElementById('name').value.trim(),
     rating: document.getElementById('rating').value.trim(),
-    review: document.getElementById('review-field').value.trim()
+    comments: document.getElementById('review-field').value.trim()
   }
 }
 

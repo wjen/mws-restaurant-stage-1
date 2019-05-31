@@ -92,10 +92,11 @@ self.addEventListener('fetch', event => {
   let checkUrl = new URL(event.request.url);
   let id = checkUrl.searchParams.get('restaurant_id') - 0;
   if (checkUrl.port === "1337") {
-    handleAJAXEvent(event, id);
+    return handleAJAXEvent(event, id);
   } else if (event.request.method === "GET") {
     event.respondWith(
       caches.match(event.request).then(response => {
+        console.log('this should not show');
         return (response || fetch(event.request).then(fetchResponse => {
           let useCache = isImageURL(event.request.url) ?  IMAGES_CACHE : STATIC_CACHE;
           return caches.open(useCache).then(cache => {
@@ -115,12 +116,8 @@ self.addEventListener('fetch', event => {
 const handleAJAXEvent = (event, id) => {
   // Only use for caching for Get events
   if(event.request.method !== "GET") {
-    return fetch(event.request)
-      .then(response => response.json())
-      .then(json => json);
-  }
-
-  if(event.request.url.indexOf("restaurants") > -1) {
+    event.respondWith( fetch(event.request))
+  } else if(event.request.url.indexOf("restaurants") > -1) {
     handleRestaurantEvents(event);
   } else {
     console.log('starting handling from reviews event')
