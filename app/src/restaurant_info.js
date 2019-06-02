@@ -105,6 +105,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   // fill reviews
   DBHelper.fetchReviews(restaurant.id, (error, reviews) => {
     fillReviewsHTML(reviews);
+
   });
 }
 
@@ -156,6 +157,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
  */
 createReviewHTML = (review) => {
   const li = document.createElement('li');
+  li.setAttribute('id', `review-li-${review.id}`)
   const name = document.createElement('p');
   name.innerHTML = review.name;
   li.appendChild(name);
@@ -171,6 +173,7 @@ createReviewHTML = (review) => {
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
   li.appendChild(comments);
+
 
   return li;
 }
@@ -217,14 +220,20 @@ const submitReview = () => {
     alert('comments input must be minimum of 3 characters');
     return;
   }
-  // if(!editing) {
-    formData.restaurant_id = self.restaurant.id;
-  // }
+  formData.restaurant_id = self.restaurant.id;
   DBHelper.saveNewReview(formData, (error, result) => {
-    console.log(result);
-    console.log('review saved');
+    console.log('result: ' , result);
+    let alertMsg = 'Created Review';
+    alert(alertMsg);
+    let new_review_block = createReviewHTML(result);
+    console.log(new_review_block);
+    const ul = document.getElementById('reviews-list');
+    ul.appendChild(new_review_block);
+    var element = document.getElementById(`review-li-${result.id}`);
+    if(element.scrollIntoView && element.scrollIntoView.constructor === Function) {
+      element.scrollIntoView(true);
+    }
   });
-  return
 }
 
 const getFormValues = () => {

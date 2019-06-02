@@ -191,6 +191,30 @@ const createRestaurantHTML = (restaurant) => {
   address.innerHTML = restaurant.address;
   li.append(address);
 
+  console.log("is_favorite: ", restaurant["is_favorite"]);
+
+  const favBtn = document.createElement('button');
+  const isFavorite = (restaurant["is_favorite"] && restaurant["is_favorite"].toString() === "true") ? true : false;
+  if(restaurant.is_favorite === "true" || restaurant.is_favorite === true) {
+    favBtn.innerHTML = 'favorite!';
+    favBtn.style.background = '#990000';
+  } else {
+    favBtn.innerHTML = 'add to favorite';
+    favBtn.style.background = 'grey';
+  }
+  favBtn.setAttribute("title", `toggle favorites for: ${restaurant.name}`);
+  favBtn.setAttribute("id", `fav-btn-${restaurant.id}`);
+  favBtn.setAttribute("data-restaurant-id", restaurant.id);
+
+  favBtn.addEventListener("click", () => {
+    console.log('clicked favbtn');
+    favBtn.classList.toggle('favorite');
+    DBHelper.toggleFavBtn(restaurant.id);
+  })
+
+
+  li.append(favBtn);
+
   const more = document.createElement('button');
   more.classList = "button button--success";
   more.innerHTML = 'View Details';
@@ -199,7 +223,7 @@ const createRestaurantHTML = (restaurant) => {
     const url = DBHelper.urlForRestaurant(restaurant);
     window.location = url;
   }
-  li.append(more)
+  li.append(more);
 
   return li
 }

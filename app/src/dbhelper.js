@@ -1,6 +1,23 @@
 /**
  * Common database helper functions.
  */
+import { openDB, deleteDB, wrap, unwrap } from 'idb';
+
+const dbPromise = openDB('rr-db', 2, {
+  upgrade(db, oldVersion) {
+    switch (oldVersion) {
+      case 0:
+        const store = db.createObjectStore('restaurants', { keyPath: 'id', });
+        store.createIndex('id', 'id');
+      case 1:
+        const reviewsStore = db.createObjectStore('reviews', {
+          keyPath: 'id',
+          autoIncrement: true
+        });
+        reviewsStore.createIndex("restaurant_id", "restaurant_id");
+    }
+  }
+});
 
 class DBHelper {
 
@@ -195,10 +212,24 @@ class DBHelper {
     return marker;
   }
 
+  static updateCachedRestaurantReview(formData) {
+    console.log('updating cache for new review', formData);
+    return dbPromise.then( db => {
+      const tx = db.transaction('reviews', 'readwrite');
+      const store = tx.objectStore('reviews');
+      console.log('putting review in store');
+      store.put(formData);
+      console.log('successfully put review in store');
+      return tx.done;
+    })
+  }
+
   static saveNewReview(formData, callback) {
     // Block any more clicks on the submit button until the callback
     // const btn = document.getElementById("submit-form-btn");
     // btn.onclick = null;
+    DBHelper.updateCachedRestaurantReview(formData);
+
     fetch('http://localhost:1337/reviews/', {
       method: 'POST',
       body: JSON.stringify(formData)
@@ -209,8 +240,52 @@ class DBHelper {
     }).catch(error => {
       console.log(error);
     });
+  }
 
+  static syncRestaurant(restaurant) {
+     try {
+       let url = `http://localhost:1337/restaurants/${restaurant.id}/?is_favorite=${restaurant.is_favorite}`;
+       let params = {method: 'PUT', headers: {'Content-Type': 'application/json'}};
+       return fetch(url, params).then(function(r){ return r.json() });
+     }
+     catch(e) {
+       console.log('error updating restaurant backend data...', e, restaurant);
+     }
+  }
+     static updateRestaurantInDB(new_restaurant) {
+       return dbPromise.then(function(db){
+         let tx = db.transaction('restaurants', 'readwrite');
+         let store = tx.objectStore('restaurants');
+         store.put(new_restaurant);
+         return tx.complete
+       }).then(function(){
+          return Promise.resolve(new_restaurant);
+       });
+     }
 
+  static toggleFavBtn(restaurant_id) {
+        return dbPromise.then( db => {
+        let tx = db.transaction('restaurants');
+        let store = tx.objectStore('restaurants');
+        return store.get(restaurant_id);
+      }).then( restaurant => {
+        console.log(restaurant);
+        const new_restaurant = Object.assign({}, restaurant);
+        new_restaurant.is_favorite = (restaurant.is_favorite === 'true' || restaurant.is_favorite === true) ?
+        'false' : 'true';
+        DBHelper.syncRestaurant(new_restaurant);
+        return DBHelper.updateRestaurantInDB(new_restaurant);
+      }).then( new_restaurant => {
+           const favBtn = document.getElementById(`fav-btn-${new_restaurant.id}`);
+           if(new_restaurant.is_favorite === 'true' || new_restaurant.is_favorite === true) {
+             favBtn.innerHTML = 'favorite!';
+             favBtn.style.background = '#990000';
+           }
+           else {
+             favBtn.innerHTML = 'add to favorite';
+             favBtn.style.background = 'grey';
+           }
+      })
   }
 
 }

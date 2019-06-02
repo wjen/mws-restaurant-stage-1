@@ -15,7 +15,10 @@ const dbPromise = openDB('rr-db', 2, {
         const store = db.createObjectStore('restaurants', { keyPath: 'id' });
         store.createIndex('id', 'id');
       case 1:
-        const reviewsStore = db.createObjectStore('reviews', {keyPath: 'id' });
+        const reviewsStore = db.createObjectStore('reviews', {
+          keyPath: 'id',
+          autoIncrement: true
+        });
         reviewsStore.createIndex("restaurant_id", "restaurant_id");
     }
   }
@@ -172,6 +175,7 @@ const handleReviewsEvents = (event, id) => {
         .index("restaurant_id")
         .getAll(id);
     }).then( data => {
+      console.log('serviceworker handle reviews');
       console.log(data);
       return (data.length && data) || fetch(event.request)
         .then(fetchResponse => {
