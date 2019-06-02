@@ -245,7 +245,7 @@ class DBHelper {
   static syncRestaurant(restaurant) {
      try {
        let url = `http://localhost:1337/restaurants/${restaurant.id}/?is_favorite=${restaurant.is_favorite}`;
-       let params = {method: 'PUT', headers: {'Content-Type': 'application/json'}};
+       let params = {method: 'PUT'};
        return fetch(url, params).then(function(r){ return r.json() });
      }
      catch(e) {
@@ -278,11 +278,11 @@ class DBHelper {
       }).then( new_restaurant => {
            const favBtn = document.getElementById(`fav-btn-${new_restaurant.id}`);
            if(new_restaurant.is_favorite === 'true' || new_restaurant.is_favorite === true) {
-             favBtn.innerHTML = 'favorite!';
-             favBtn.style.background = '#990000';
+             favBtn.innerHTML = 'Favorited!';
+             favBtn.style.background = 'hotpink';
            }
            else {
-             favBtn.innerHTML = 'add to favorite';
+             favBtn.innerHTML = 'Add to favorite';
              favBtn.style.background = 'grey';
            }
       })

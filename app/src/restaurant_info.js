@@ -222,11 +222,9 @@ const submitReview = () => {
   }
   formData.restaurant_id = self.restaurant.id;
   DBHelper.saveNewReview(formData, (error, result) => {
-    console.log('result: ' , result);
     let alertMsg = 'Created Review';
     alert(alertMsg);
     let new_review_block = createReviewHTML(result);
-    console.log(new_review_block);
     const ul = document.getElementById('reviews-list');
     ul.appendChild(new_review_block);
     var element = document.getElementById(`review-li-${result.id}`);

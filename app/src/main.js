@@ -196,10 +196,10 @@ const createRestaurantHTML = (restaurant) => {
   const favBtn = document.createElement('button');
   const isFavorite = (restaurant["is_favorite"] && restaurant["is_favorite"].toString() === "true") ? true : false;
   if(restaurant.is_favorite === "true" || restaurant.is_favorite === true) {
-    favBtn.innerHTML = 'favorite!';
-    favBtn.style.background = '#990000';
+    favBtn.innerHTML = 'Favorited!';
+    favBtn.style.background = 'hotpink';
   } else {
-    favBtn.innerHTML = 'add to favorite';
+    favBtn.innerHTML = 'Sdd to favorite';
     favBtn.style.background = 'grey';
   }
   favBtn.setAttribute("title", `toggle favorites for: ${restaurant.name}`);
