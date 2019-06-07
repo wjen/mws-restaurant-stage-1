@@ -8,7 +8,7 @@ const allCaches = [
 
 import { openDB, deleteDB, wrap, unwrap } from 'idb';
 
-const dbPromise = openDB('rr-db', 2, {
+const dbPromise = openDB('rr-db', 3, {
   upgrade(db, oldVersion) {
     switch (oldVersion) {
       case 0:
@@ -20,6 +20,11 @@ const dbPromise = openDB('rr-db', 2, {
           autoIncrement: true
         });
         reviewsStore.createIndex("restaurant_id", "restaurant_id");
+      case 2:
+        const pendingStore = db.createObjectStore('pending', {
+          keyPath: 'id',
+          autoIncrement: true
+        });
     }
   }
 });

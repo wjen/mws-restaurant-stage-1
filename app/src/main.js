@@ -199,7 +199,7 @@ const createRestaurantHTML = (restaurant) => {
     favBtn.innerHTML = 'Favorited!';
     favBtn.style.background = 'hotpink';
   } else {
-    favBtn.innerHTML = 'Sdd to favorite';
+    favBtn.innerHTML = 'Add to favorite';
     favBtn.style.background = 'grey';
   }
   favBtn.setAttribute("title", `toggle favorites for: ${restaurant.name}`);
@@ -208,7 +208,6 @@ const createRestaurantHTML = (restaurant) => {
 
   favBtn.addEventListener("click", () => {
     console.log('clicked favbtn');
-    favBtn.classList.toggle('favorite');
     DBHelper.toggleFavBtn(restaurant.id);
   })
 

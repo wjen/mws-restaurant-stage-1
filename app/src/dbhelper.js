@@ -3,7 +3,7 @@
  */
 import { openDB, deleteDB, wrap, unwrap } from 'idb';
 
-const dbPromise = openDB('rr-db', 2, {
+const dbPromise = openDB('rr-db', 3, {
   upgrade(db, oldVersion) {
     switch (oldVersion) {
       case 0:
@@ -15,6 +15,11 @@ const dbPromise = openDB('rr-db', 2, {
           autoIncrement: true
         });
         reviewsStore.createIndex("restaurant_id", "restaurant_id");
+      case 2:
+        const pendingStore = db.createObjectStore('pending', {
+          keyPath: 'id',
+          autoIncrement: true
+        })
     }
   }
 });
@@ -264,28 +269,27 @@ class DBHelper {
      }
 
   static toggleFavBtn(restaurant_id) {
-        return dbPromise.then( db => {
-        let tx = db.transaction('restaurants');
-        let store = tx.objectStore('restaurants');
-        return store.get(restaurant_id);
-      }).then( restaurant => {
-        console.log(restaurant);
-        const new_restaurant = Object.assign({}, restaurant);
-        new_restaurant.is_favorite = (restaurant.is_favorite === 'true' || restaurant.is_favorite === true) ?
-        'false' : 'true';
-        DBHelper.syncRestaurant(new_restaurant);
-        return DBHelper.updateRestaurantInDB(new_restaurant);
-      }).then( new_restaurant => {
-           const favBtn = document.getElementById(`fav-btn-${new_restaurant.id}`);
-           if(new_restaurant.is_favorite === 'true' || new_restaurant.is_favorite === true) {
-             favBtn.innerHTML = 'Favorited!';
-             favBtn.style.background = 'hotpink';
-           }
-           else {
-             favBtn.innerHTML = 'Add to favorite';
-             favBtn.style.background = 'grey';
-           }
-      })
+    return dbPromise.then( db => {
+      let tx = db.transaction('restaurants');
+      let store = tx.objectStore('restaurants');
+      return store.get(restaurant_id);
+    }).then( restaurant => {
+      console.log(restaurant);
+      const new_restaurant = Object.assign({}, restaurant);
+      new_restaurant.is_favorite = (restaurant.is_favorite === 'true' || restaurant.is_favorite === true) ?
+      'false' : 'true';
+      DBHelper.syncRestaurant(new_restaurant);
+      return DBHelper.updateRestaurantInDB(new_restaurant);
+    }).then( new_restaurant => {
+      const favBtn = document.getElementById(`fav-btn-${new_restaurant.id}`);
+      if(new_restaurant.is_favorite === 'true' || new_restaurant.is_favorite === true) {
+        favBtn.innerHTML = 'Favorited!';
+        favBtn.style.background = 'hotpink';
+      } else {
+        favBtn.innerHTML = 'Add to favorite';
+        favBtn.style.background = 'grey';
+      }
+    })
   }
 
 }
