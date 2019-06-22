@@ -269,7 +269,7 @@ class DBHelper {
     let method;
     let body;
 
-    dbPromise.then(db => {
+    return new Promise( (resolve, reject) => { dbPromise.then(db => {
       if (!db.objectStoreNames.length) {
         console.log("DB not available");
         db.close();
@@ -281,15 +281,11 @@ class DBHelper {
         if (!cursor) {
             return;
           }
-        console.log(cursor);
         const value = cursor.value;
         url = cursor.value.data.url;
         method = cursor.value.data.method;
         body = cursor.value.data.formData;
-        console.log(value);
-        console.log(url);
-        console.log(method);
-        console.log(body);
+
 
         // If we don't have a parameter then we're on a bad record that should be tossed
         // and then move on
@@ -311,6 +307,7 @@ class DBHelper {
           }
           return response.json();
         }).then( j => {
+          console.log(j);
           const deltx = db.transaction('pending', 'readwrite');
           const store = deltx.objectStore('pending');
           store.openCursor()
@@ -319,7 +316,7 @@ class DBHelper {
               .then(() => {
                 callback();
                 console.log(j);
-                return j;
+                return resolve(j);
               })
             })
           console.log('deleted item from pending store');
@@ -328,6 +325,7 @@ class DBHelper {
           return;
         })
       })
+    })
     })
   }
 
