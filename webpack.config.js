@@ -4,12 +4,12 @@ module.exports = {
   mode: 'development',
   entry: {
      app: [
-      './app/src/registration.js',
+      // './app/src/registration.js',
       './app/src/dbhelper.js',
       './app/src/main.js'
      ],
      restaurant: [
-      './app/src/registration.js',
+      // './app/src/registration.js',
       './app/src/dbhelper.js',
       './app/src/restaurant_info.js'
      ],

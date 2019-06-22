@@ -233,18 +233,102 @@ class DBHelper {
     // Block any more clicks on the submit button until the callback
     // const btn = document.getElementById("submit-form-btn");
     // btn.onclick = null;
+    const url = DBHelper.DATABASE_REVIEWS_URL;
+    const method = "POST";
     DBHelper.updateCachedRestaurantReview(formData);
+    DBHelper.addPendingRequestToQue(url, method, formData);
 
-    fetch('http://localhost:1337/reviews/', {
-      method: 'POST',
-      body: JSON.stringify(formData)
-    }).then(response => {
-      return response.json();
-    }).then( j => {
-      callback(null, j);
+  }
+
+  static addPendingRequestToQue(url, method, formData) {
+    //open database and add request details to the pending store
+    dbPromise.then(db => {
+      const tx = db.transaction('pending', 'readwrite');
+      const store = tx.objectStore('pending');
+      store.put({
+        data: {
+          url,
+          method,
+          formData
+        }
+      })
     }).catch(error => {
       console.log(error);
+    }).then(DBHelper.nextPending());
+  }
+
+  static nextPending() {
+    DBHelper.attemptCommitPending(DBHelper.nextPending).then(j => {
+      console.log(j);
     });
+  }
+
+  static attemptCommitPending(callback) {
+    // Iterate over the pending items until there is a network failure
+    let url;
+    let method;
+    let body;
+
+    dbPromise.then(db => {
+      if (!db.objectStoreNames.length) {
+        console.log("DB not available");
+        db.close();
+        return;
+      }
+      const tx = db.transaction('pending', 'readwrite');
+      const store = tx.objectStore('pending');
+      store.openCursor().then( cursor => {
+        if (!cursor) {
+            return;
+          }
+        console.log(cursor);
+        const value = cursor.value;
+        url = cursor.value.data.url;
+        method = cursor.value.data.method;
+        body = cursor.value.data.formData;
+        console.log(value);
+        console.log(url);
+        console.log(method);
+        console.log(body);
+
+        // If we don't have a parameter then we're on a bad record that should be tossed
+        // and then move on
+        if ((!url || !method) || (method === "POST" && !body)) {
+          cursor
+            .delete()
+            .then(callback());
+          return;
+        };
+
+        const properties = {
+          body: JSON.stringify(body),
+          method: method
+        }
+        fetch(url, properties).then(response => {
+        // If we don't get a good response then assume we're offline
+          if (!response.ok && !response.redirected) {
+            return;
+          }
+          return response.json();
+        }).then( j => {
+          const deltx = db.transaction('pending', 'readwrite');
+          const store = deltx.objectStore('pending');
+          store.openCursor()
+            .then( cursor => {
+              cursor.delete()
+              .then(() => {
+                callback();
+                console.log(j);
+                return j;
+              })
+            })
+          console.log('deleted item from pending store');
+        }).catch(error => {
+          console.log(error);
+          return;
+        })
+      })
+    })
   }
 
   static syncRestaurant(restaurant) {
