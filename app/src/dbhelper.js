@@ -236,13 +236,16 @@ class DBHelper {
     const url = DBHelper.DATABASE_REVIEWS_URL;
     const method = "POST";
     DBHelper.updateCachedRestaurantReview(formData);
-    DBHelper.addPendingRequestToQue(url, method, formData);
+    DBHelper.addPendingRequestToQue(url, method, formData).then(json => {
+      callback(null, json);
+    });
 
   }
 
   static addPendingRequestToQue(url, method, formData) {
     //open database and add request details to the pending store
-    dbPromise.then(db => {
+    return new Promise((resolve, reject) => {
+      dbPromise.then(db => {
       const tx = db.transaction('pending', 'readwrite');
       const store = tx.objectStore('pending');
       store.put({
@@ -254,12 +257,17 @@ class DBHelper {
       })
     }).catch(error => {
       console.log(error);
-    }).then(DBHelper.nextPending());
+    }).then(DBHelper.nextPending((error, json) => {
+      console.log(json);
+      return resolve(json);
+    }));
+  });
   }
 
-  static nextPending() {
+  static nextPending(callback) {
     DBHelper.attemptCommitPending(DBHelper.nextPending).then(j => {
       console.log(j);
+      callback(null, j);
     });
   }
 
@@ -307,7 +315,6 @@ class DBHelper {
           }
           return response.json();
         }).then( j => {
-          console.log(j);
           const deltx = db.transaction('pending', 'readwrite');
           const store = deltx.objectStore('pending');
           store.openCursor()
