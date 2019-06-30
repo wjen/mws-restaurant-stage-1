@@ -37,6 +37,7 @@ initMap = () => {
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.newMap);
     }
   });
+  DBHelper.nextPending();
 }
 
 /* window.initMap = () => {
@@ -221,7 +222,7 @@ const submitReview = () => {
     return;
   }
   formData.restaurant_id = self.restaurant.id;
-  DBHelper.saveNewReview(formData, (error, result) => {
+  DBHelper.saveNewReview(formData).then( result => {
     console.log(result);
     let alertMsg = 'Created Review';
     alert(alertMsg);

@@ -29,17 +29,6 @@ const dbPromise = openDB('rr-db', 3, {
   }
 });
 
-// const getRestaurants = (event) => {
-//   console.log(event.request);
-//   fetch(event.request)
-//     .then( fetchResponse => {
-//       console.log('still grabbing from fetch');
-//       return fetchResponse.json();
-//     }).catch(error => {
-//       console.log(error);
-//       reject(error);
-//     })
-// }
  const getRestaurants = (event) => {
     return new Promise(function(resolve, reject) {
       fetch(event.request)
@@ -98,26 +87,11 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   let checkUrl = new URL(event.request.url);
-  let id = checkUrl.searchParams.get('restaurant_id') - 0;
   if (checkUrl.port === "1337") {
+    let id = checkUrl.searchParams.get('restaurant_id') - 0;
     return handleAJAXEvent(event, id);
-  } else if (event.request.method === "GET") {
-    event.respondWith(
-      caches.match(event.request).then(response => {
-        console.log('this should not show');
-        return (response || fetch(event.request).then(fetchResponse => {
-          let useCache = isImageURL(event.request.url) ?  IMAGES_CACHE : STATIC_CACHE;
-          return caches.open(useCache).then(cache => {
-             cache.put(event.request, fetchResponse.clone());
-             return fetchResponse;
-          });
-        }));
-      }).catch(error => {
-        console.log(error);
-      })
-    );
   } else {
-    event.respondWith( fetch(event.request) );
+    handleNonAJAXEvent(event);
   }
 });
 
@@ -169,8 +143,6 @@ const handleRestaurantEvents = (event) => {
   )
 }
 
-
-
 const handleReviewsEvents = (event, id) => {
   event.respondWith(
     dbPromise.then(db => {
@@ -200,10 +172,33 @@ const handleReviewsEvents = (event, id) => {
           .then( () => reviews)
         })
     }).then(finalResponse => {
-        console.log(finalResponse);
-          return new Response(JSON.stringify(finalResponse));
-        }).catch(error => {
-          return new Response("Error fetching data", {status: 500});
-        }))
+      console.log(finalResponse);
+      return new Response(JSON.stringify(finalResponse));
+    }).catch(error => {
+      return new Response("Error fetching data", {status: 500});
+    }))
+}
 
+const handleNonAJAXEvent = (event) => {
+  // Check if the HTML request has previously been cached. If so, return the
+  // response from the cache. If not, fetch the request, cache it, and then return
+  // it.
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      return (response || fetch(event.request).then(fetchResponse => {
+        let useCache = isImageURL(event.request.url) ?  IMAGES_CACHE : STATIC_CACHE;
+        return caches
+          .open(useCache)
+          .then(cache => {
+            cache.put(event.request, fetchResponse.clone());
+            return fetchResponse;
+        });
+      }).catch(error => {
+        return new Response("Application is not connected to the internet", {
+          status: 404,
+          statusText: "Application is not connected to the internet"
+        });
+      }));
+    })
+  );
 }

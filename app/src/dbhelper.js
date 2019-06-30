@@ -229,16 +229,14 @@ class DBHelper {
     })
   }
 
-  static saveNewReview(formData, callback) {
+  static saveNewReview(formData) {
     // Block any more clicks on the submit button until the callback
     // const btn = document.getElementById("submit-form-btn");
     // btn.onclick = null;
     const url = DBHelper.DATABASE_REVIEWS_URL;
     const method = "POST";
     DBHelper.updateCachedRestaurantReview(formData);
-    DBHelper.addPendingRequestToQue(url, method, formData).then(json => {
-      callback(null, json);
-    });
+    return DBHelper.addPendingRequestToQue(url, method, formData).then(json => json);
 
   }
 
@@ -311,6 +309,8 @@ class DBHelper {
         fetch(url, properties).then(response => {
         // If we don't get a good response then assume we're offline
           if (!response.ok && !response.redirected) {
+            console.log('this is the response and we are offline');
+            console.log(response);
             return;
           }
           return response.json();
