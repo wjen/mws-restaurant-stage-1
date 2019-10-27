@@ -24,7 +24,7 @@ const dbPromise = openDB('rr-db', 3, {
   }
 });
 
-class DBHelper {
+export default class DBHelper {
 
   /**
    * Database URL.
@@ -382,6 +382,4 @@ class DBHelper {
   }
 
 }
-
-window.DBHelper = DBHelper;
 

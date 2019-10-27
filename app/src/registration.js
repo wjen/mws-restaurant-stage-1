@@ -1,4 +1,4 @@
-(function () {
+export default function () {
 
   if ('serviceWorker' in navigator) {
    window.addEventListener('load', () => {
@@ -10,6 +10,6 @@
    });
   }
 
-})();
+};
 
 
