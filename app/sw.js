@@ -56,12 +56,10 @@ self.addEventListener('install', event => {
     caches.open(STATIC_CACHE).then(cache => {
       return cache.addAll([
         '/',
-        '/src/main.js',
-        '/src/dbhelper.js',
+        '/app.bundle.js',
+        '/restaurant.bundle.js',
         '/restaurant.html',
         '/index.html',
-        '/src/restaurant_info.js',
-        '/src/styles.css',
         '/src/rr-icon512.png'
       ]).catch(error => {
         console.log('error opening cache' + error);
