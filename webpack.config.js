@@ -7,8 +7,6 @@ module.exports = {
       './app/src/main.js'
      ],
      restaurant: [
-      './app/src/registration.js',
-      './app/src/dbhelper.js',
       './app/src/restaurant_info.js'
      ],
      serviceworker: './app/sw.js'
@@ -19,7 +17,6 @@ module.exports = {
   },
   devtool: 'inline-source-map',
    devServer: {
-    publicPath: '/assets/',
     contentBase: resolve(__dirname, "app"),
     watchContentBase: true,
     compress: true,

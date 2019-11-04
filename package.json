@@ -4,8 +4,8 @@
   "description": "--- #### _Three Stage Course Material Project - Restaurant Reviews_",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack-dev-server --mode development --open",
-    "start": "webpack -p && node server.js"
+    "dev": "set NODE_ENV=development && webpack-dev-server --mode development --open",
+    "start": "set NODE_ENV=production && webpack -p && node server.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "browser-sync": "^2.26.3",
     "compression": "^1.7.3",
     "css-loader": "^2.1.1",
+    "dotenv": "^8.2.0",
     "express": "^4.16.4",
     "gulp-babel": "^8.0.0",
     "gulp-concat": "^2.6.1",

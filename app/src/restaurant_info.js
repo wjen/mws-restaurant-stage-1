@@ -1,3 +1,4 @@
+import './styles.css';
 import registration from './registration';
 import DBHelper from './dbhelper';
 
