@@ -3,12 +3,8 @@ const resolve = require('path').resolve;
 module.exports = {
   mode: 'development',
   entry: {
-     app: [
-      './app/src/main.js'
-     ],
-     restaurant: [
-      './app/src/restaurant_info.js'
-     ],
+     app: './app/src/main.js',
+     restaurant: './app/src/restaurant_info.js',
      serviceworker: './app/sw.js'
   },
   output: {
@@ -23,7 +19,12 @@ module.exports = {
    },
   module: {
     rules: [
-      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" },
+      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader",
+        // query: {
+        //   babelrc: false,
+        //   presets: [["es2015", { modules: false }], "react", "stage-3"],
+        // },
+      },
       {
         test: /\.css$/,
         use: [
