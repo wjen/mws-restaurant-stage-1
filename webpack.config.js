@@ -1,4 +1,6 @@
 const resolve = require('path').resolve;
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
 
 module.exports = {
   mode: 'development',
