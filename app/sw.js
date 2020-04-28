@@ -1,5 +1,5 @@
 const cacheVersion = '5';
-const STATIC_CACHE = `static_cache-v${cacheVersion}`;
+const STATIC_CACHE = `restaurant_cache-v${cacheVersion}`;
 const IMAGES_CACHE = `images_cache-v`;
 const allCaches = [
   STATIC_CACHE,
@@ -50,7 +50,6 @@ function isImageURL(url) {
   return isImage;
 }
 
-
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(STATIC_CACHE).then(cache => {
@@ -68,16 +67,16 @@ self.addEventListener('install', event => {
   );
 });
 
+//clean unused caches starting with restaurant
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
-      Promise.all(
-         cacheNames.map(cache => {
-          if(!allCaches.includes(cache)) {
-            return caches.delete(cache);
-          }
-        })
-      )
+      return Promise.all(
+        cacheNames.filter(cacheName => {
+          return cacheName.startsWith('restaurant-') &&
+                 cacheName != STATIC_CACHE;
+        }).map(cacheName => caches.delete(cacheName))
+      );
     })
   );
 });

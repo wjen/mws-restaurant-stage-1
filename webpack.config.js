@@ -9,7 +9,7 @@ module.exports = {
   entry: {
      app: './app/src/main.js',
      restaurant: './app/src/restaurant_info.js',
-     // serviceworker: './app/sw.js'
+     serviceworker: './app/sw.js'
   },
   output: {
     path: path.resolve(__dirname, "dist"),
