@@ -21,6 +21,7 @@ module.exports = {
     watchContentBase: true,
     compress: true,
     writeToDisk: true,
+    // hot: true,
    },
   plugins: [
     new CopyWebpackPlugin([
