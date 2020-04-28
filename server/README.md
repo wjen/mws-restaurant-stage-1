@@ -67,6 +67,10 @@ http://localhost:1337/restaurants/?is_favorite=true
 http://localhost:1337/restaurants/<restaurant_id>
 ```
 
+#### Get all reviews for a restaurant
+```
+http://localhost:1337/reviews/?restaurant_id=<restaurant_id>
+```
 
 #### Get all restaurant reviews
 ```
