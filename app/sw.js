@@ -1,5 +1,5 @@
-const cacheVersion = '5';
-const STATIC_CACHE = `restaurant_cache-v${cacheVersion}`;
+const cacheVersion = '7';
+const STATIC_CACHE = `restaurant-cache-v${cacheVersion}`;
 const IMAGES_CACHE = `images_cache-v`;
 const allCaches = [
   STATIC_CACHE,
@@ -59,7 +59,7 @@ self.addEventListener('install', event => {
         '/restaurant.bundle.js',
         '/restaurant.html',
         '/index.html',
-        '/src/rr-icon512.png'
+        './img/rr-icon512.png'
       ]).catch(error => {
         console.log('error opening cache' + error);
       });
