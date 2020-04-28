@@ -7,17 +7,18 @@ module.exports = {
   entry: {
      app: './app/src/main.js',
      restaurant: './app/src/restaurant_info.js',
-     serviceworker: './app/sw.js'
+     // serviceworker: './app/sw.js'
   },
   output: {
-    path: resolve(__dirname, "app"),
+    path: resolve(__dirname, "dist"),
     filename: '[name].bundle.js'
   },
   devtool: 'inline-source-map',
    devServer: {
-    contentBase: resolve(__dirname, "app"),
+    contentBase: resolve(__dirname, "dist"),
     watchContentBase: true,
     compress: true,
+    writeToDisk: true,
    },
   module: {
     rules: [

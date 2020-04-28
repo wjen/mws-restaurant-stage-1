@@ -1,4 +1,4 @@
-import registration from './registration';
+// import registration from './registration';
 import DBHelper from './dbhelper';
 
 let restaurant;
