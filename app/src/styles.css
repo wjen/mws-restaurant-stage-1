@@ -118,6 +118,9 @@ ul {
   width: 48px;
   height: 48px;
   background-color: white;
+  position: absolute;
+  left: 10px;
+  top: 10px;
 }
 .navigation h1 a {
   color: #fff;
