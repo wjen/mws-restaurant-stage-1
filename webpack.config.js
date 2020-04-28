@@ -1,5 +1,7 @@
-const resolve = require('path').resolve;
+const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 
 
 module.exports = {
@@ -10,16 +12,21 @@ module.exports = {
      // serviceworker: './app/sw.js'
   },
   output: {
-    path: resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "dist"),
     filename: '[name].bundle.js'
   },
   devtool: 'inline-source-map',
    devServer: {
-    contentBase: resolve(__dirname, "dist"),
+    contentBase: path.resolve(__dirname, "dist"),
     watchContentBase: true,
     compress: true,
     writeToDisk: true,
    },
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: path.resolve(__dirname, 'app') }
+    ])
+  ],
   module: {
     rules: [
       { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader",
