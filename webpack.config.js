@@ -3,7 +3,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 
-
 module.exports = {
   mode: 'development',
   entry: {
@@ -13,7 +12,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: '[name].bundle.js'
+    filename: '[name].bundle.js',
   },
   devtool: 'inline-source-map',
    devServer: {
@@ -25,7 +24,13 @@ module.exports = {
    },
   plugins: [
     new CopyWebpackPlugin([
-      { from: path.resolve(__dirname, 'app') }
+      {
+        from: path.resolve(__dirname, 'app/html'),
+      },
+      {
+        from: path.resolve(__dirname, 'app/css'),
+        to: path.resolve(__dirname, 'dist/css')
+      }
     ])
   ],
   module: {

@@ -1,6 +1,5 @@
-import registration from './registration';
+// import registration from './registration';
 import DBHelper from './dbhelper';
-import './styles.css';
 
 
 let restaurants,
@@ -181,7 +180,8 @@ const createRestaurantHTML = (restaurant) => {
   image.className = 'restaurant-img';
   image.setAttribute('alt', restaurant.name);
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  console.log(image.src);
+  console.log(DBHelper.imageUrlForRestaurant(restaurant));
+  console.log(image.src)
   div.append(image);
   li.append(div);
 

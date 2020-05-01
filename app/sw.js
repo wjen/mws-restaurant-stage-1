@@ -59,7 +59,7 @@ self.addEventListener('install', event => {
         '/restaurant.bundle.js',
         '/restaurant.html',
         '/index.html',
-        './img/rr-icon512.png'
+        '/src/rr_icon.png',
       ]).catch(error => {
         console.log('error opening cache' + error);
       });

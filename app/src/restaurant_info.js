@@ -1,6 +1,5 @@
-import registration from './registration';
+// import registration from './registration';
 import DBHelper from './dbhelper';
-import './styles.css';
 let restaurant;
 let submitBtn;
 var newMap;
