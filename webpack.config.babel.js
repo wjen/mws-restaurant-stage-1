@@ -3,10 +3,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 import imageminMozjpeg from 'imagemin-mozjpeg';
-
-
-
-
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   mode: 'development',
@@ -27,6 +24,9 @@ module.exports = {
     writeToDisk: true,
     // hot: true,
    },
+   node: {
+    fs: 'empty'
+  },
   plugins: [
     new CopyWebpackPlugin([
       {
@@ -50,16 +50,10 @@ module.exports = {
         })
       ]
     }),
-
+    new Dotenv()
   ],
   module: {
     rules: [
-      // { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader",
-      //   query: {
-      //     babelrc: false,
-      //     presets: [["es2015", { modules: false }], "react", "stage-3"],
-      //   },
-      // },
       {
         test: /\.css$/,
         use: [

@@ -1,21 +1,12 @@
 // import registration from './registration';
 import DBHelper from './dbhelper';
 
-
 let restaurants,
   neighborhoods,
   cuisines
 var newMap;
 var markers = [];
 
-// const dbPromise = idb.open('rr-db', 1, upgradeDB => {
-//   var restaurants_store = upgradeDB.createObjectStore('restaurants', { keyPath: 'id' });
-//   restaurants_store.createIndex('id', 'id');
-
-//   var reviews_store = upgradeDB.createObjectStore('reviews', { keyPath: 'id' });
-//   reviews_store.createIndex('id', 'id');
-//   reviews_store.createIndex('restaurant_id', 'restaurant_id');
-// });
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
@@ -163,7 +154,6 @@ const resetRestaurants = (restaurants) => {
 const fillRestaurantsHTML = (restaurants = self.restaurants) => {
   const ul = document.getElementById('restaurants-list');
   restaurants.forEach(restaurant => {
-    console.log(restaurant);
     ul.append(createRestaurantHTML(restaurant));
   });
   addMarkersToMap();
@@ -180,8 +170,6 @@ const createRestaurantHTML = (restaurant) => {
   image.className = 'restaurant-img';
   image.setAttribute('alt', restaurant.name);
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  console.log(DBHelper.imageUrlForRestaurant(restaurant));
-  console.log(image.src)
   div.append(image);
   li.append(div);
 
