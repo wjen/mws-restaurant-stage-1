@@ -1,8 +1,9 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-var ImageminPlugin = require('imagemin-webpack-plugin').default;
-const imageminMozjpeg = require('imagemin-mozjpeg');
+const ImageminPlugin = require('imagemin-webpack-plugin').default;
+import imageminMozjpeg from 'imagemin-mozjpeg';
+
 
 
 
@@ -53,12 +54,12 @@ module.exports = {
   ],
   module: {
     rules: [
-      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader",
-        // query: {
-        //   babelrc: false,
-        //   presets: [["es2015", { modules: false }], "react", "stage-3"],
-        // },
-      },
+      // { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader",
+      //   query: {
+      //     babelrc: false,
+      //     presets: [["es2015", { modules: false }], "react", "stage-3"],
+      //   },
+      // },
       {
         test: /\.css$/,
         use: [
