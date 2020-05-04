@@ -1,6 +1,10 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+var ImageminPlugin = require('imagemin-webpack-plugin').default;
+const imageminMozjpeg = require('imagemin-mozjpeg');
+
+
 
 
 module.exports = {
@@ -30,8 +34,22 @@ module.exports = {
       {
         from: path.resolve(__dirname, 'app/css'),
         to: path.resolve(__dirname, 'dist/css')
-      }
-    ])
+      },
+      {
+        from: path.resolve(__dirname, 'app/img'),
+        to: path.resolve(__dirname, 'dist/img')
+      },
+    ]),
+    new ImageminPlugin({
+      test: /\.(jpe?g|jpg|png|gif|svg)$/i,
+      plugins: [
+        imageminMozjpeg({
+          quality: 75,
+          progressive: true
+        })
+      ]
+    }),
+
   ],
   module: {
     rules: [
@@ -55,8 +73,8 @@ module.exports = {
       {
          test: /\.(png|svg|jpg|gif)$/,
          use: [
-           'file-loader'
-         ]
+           'file-loader',
+         ],
       }
     ]
   }
