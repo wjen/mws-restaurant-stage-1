@@ -41,15 +41,17 @@ module.exports = {
         to: path.resolve(__dirname, 'dist/img')
       },
     ]),
+    // used to lower image size by lowering quality
     new ImageminPlugin({
       test: /\.(jpe?g|jpg|png|gif|svg)$/i,
       plugins: [
         imageminMozjpeg({
-          quality: 75,
+          quality: 70,
           progressive: true
         })
       ]
     }),
+    //webpack's version of dot.env
     new Dotenv()
   ],
   module: {
