@@ -2,27 +2,27 @@
  * Common database helper functions.
  */
 import { openDB, deleteDB, wrap, unwrap } from 'idb';
-
-const dbPromise = openDB('rr-db', 3, {
-  upgrade(db, oldVersion) {
-    switch (oldVersion) {
-      case 0:
-        const store = db.createObjectStore('restaurants', { keyPath: 'id', });
-        store.createIndex('id', 'id');
-      case 1:
-        const reviewsStore = db.createObjectStore('reviews', {
-          keyPath: 'id',
-          autoIncrement: true
-        });
-        reviewsStore.createIndex("restaurant_id", "restaurant_id");
-      case 2:
-        const pendingStore = db.createObjectStore('pending', {
-          keyPath: 'id',
-          autoIncrement: true
-        })
-    }
-  }
-});
+import {dbPromise} from '../sw.js';
+// const dbPromise = openDB('rr-db', 3, {
+//   upgrade(db, oldVersion) {
+//     switch (oldVersion) {
+//       case 0:
+//         const store = db.createObjectStore('restaurants', { keyPath: 'id', });
+//         store.createIndex('id', 'id');
+//       case 1:
+//         const reviewsStore = db.createObjectStore('reviews', {
+//           keyPath: 'id',
+//           autoIncrement: true
+//         });
+//         reviewsStore.createIndex("restaurant_id", "restaurant_id");
+//       case 2:
+//         const pendingStore = db.createObjectStore('pending', {
+//           keyPath: 'id',
+//           autoIncrement: true
+//         })
+//     }
+//   }
+// });
 
 export default class DBHelper {
 

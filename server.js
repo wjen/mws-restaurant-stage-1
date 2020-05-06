@@ -3,7 +3,6 @@ const path = require('path');
 const app = express();
 const idb = require('idb');
 const { env } = require('./config');
-
 // app.use(favicon(__dirname + '/public/favicon.png'));
 // the __dirname is the current directory from where the script is running
 app.use(express.static('app'));

@@ -5,8 +5,8 @@ const allCaches = [
   STATIC_CACHE,
   IMAGES_CACHE
 ];
-
 import { openDB, deleteDB, wrap, unwrap } from 'idb';
+export {dbPromise}
 
 const dbPromise = openDB('rr-db', 3, {
   upgrade(db, oldVersion) {
@@ -55,14 +55,18 @@ self.addEventListener('install', event => {
     caches.open(STATIC_CACHE).then(cache => {
       return cache.addAll([
         '/',
-        '/app.bundle.js',
-        '/restaurant.bundle.js',
-        '/restaurant.html',
-        '/index.html',
-        '/src/rr_icon.png',
+        './app.bundle.js',
+        './restaurant.bundle.js',
+        './restaurant.html',
+        './index.html',
+        './smfssf',
       ]).catch(error => {
-        console.log('error opening cache' + error);
-      });
+        console.log('error with cache');
+        return new Response("Application is not connected to the internet", {
+          status: 404,
+          statusText: "Application is not connected to the internet"
+        });
+      }).then(() => {console.log('cache successeful')});
     })
   );
 });
@@ -86,6 +90,7 @@ self.addEventListener('fetch', event => {
   let checkUrl = new URL(event.request.url);
   if (checkUrl.port === "1337") {
     let id = checkUrl.searchParams.get('restaurant_id') - 0;
+    console.log(id);
     return handleAJAXEvent(event, id);
   } else {
     handleNonAJAXEvent(event);
@@ -107,13 +112,11 @@ const handleAJAXEvent = (event, id) => {
 const handleRestaurantEvents = (event) => {
   event.respondWith(
       dbPromise.then( db => {
-        console.log('starting from idb');
         return db
           .transaction('restaurants')
           .objectStore('restaurants')
           .getAll();
       }).then(data => {
-        console.log(data);
         return ((data.length && data) || getRestaurants(event)
           .then( restaurants => {
             console.log('fetched now storing');
@@ -169,7 +172,6 @@ const handleReviewsEvents = (event, id) => {
           .then( () => reviews)
         })
     }).then(finalResponse => {
-      console.log(finalResponse);
       return new Response(JSON.stringify(finalResponse));
     }).catch(error => {
       return new Response("Error fetching data", {status: 500});

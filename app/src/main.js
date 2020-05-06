@@ -1,4 +1,4 @@
-// import registration from './registration';
+import registration from './registration';
 import DBHelper from './dbhelper';
 
 let restaurants,
@@ -11,7 +11,8 @@ var markers = [];
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-  initMap(); // added
+  initMap();
+  updateRestaurants();
   fetchNeighborhoods();
   fetchCuisines();
   DBHelper.nextPending();
@@ -93,20 +94,7 @@ const initMap = () => {
     id: 'mapbox.streets'
   }).addTo(newMap);
 
-  updateRestaurants();
 }
-/* window.initMap = () => {
-  let loc = {
-    lat: 40.722216,
-    lng: -73.987501
-  };
-  self.map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 12,
-    center: loc,
-    scrollwheel: false
-  });
-  updateRestaurants();
-} */
 
 /**
  * Update page and map for current restaurants.
@@ -201,7 +189,7 @@ const createRestaurantHTML = (restaurant) => {
   favBtn.setAttribute("data-restaurant-id", restaurant.id);
 
   favBtn.addEventListener("click", () => {
-    console.log('clicked favbtn');
+    console.log(`${restaurant.id} clicked favbtn`);
     DBHelper.toggleFavBtn(restaurant.id);
   })
 
