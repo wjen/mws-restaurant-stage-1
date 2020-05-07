@@ -57,8 +57,6 @@ self.addEventListener('install', event => {
         '/',
         './app.bundle.js',
         './restaurant.bundle.js',
-        './restaurant.html',
-        './index.html',
       ]).catch(error => {
         console.log('error setting up install event for sw');
       });
@@ -200,16 +198,17 @@ const handleNonAJAXEvent = (event) => {
     })
   );
 
-  // event.waitUntil(update(event.request));
+  // Updates the data from the network to use on next request.
+  event.waitUntil(update(event.request));
 }
 
-// const update = (request) => {
-//   let useCache = isImageURL(request.url) ?  IMAGES_CACHE : STATIC_CACHE;
-//   console.log(useCache);
-//   return caches.open(useCache).then(cache => {
-//     return fetch(request).then(response => {
-//       console.log('updating the cache');
-//       return cache.put(request, response);
-//     });
-//   });
-// }
+const update = (request) => {
+  let useCache = isImageURL(request.url) ?  IMAGES_CACHE : STATIC_CACHE;
+  console.log(useCache);
+  return caches.open(useCache).then(cache => {
+    return fetch(request).then(response => {
+      console.log('updating the cache');
+      return cache.put(request, response);
+    });
+  });
+}
