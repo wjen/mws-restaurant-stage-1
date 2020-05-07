@@ -3,6 +3,7 @@
  */
 import { openDB, deleteDB, wrap, unwrap } from 'idb';
 import {dbPromise} from '../sw.js';
+
 // const dbPromise = openDB('rr-db', 3, {
 //   upgrade(db, oldVersion) {
 //     switch (oldVersion) {

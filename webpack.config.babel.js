@@ -17,14 +17,14 @@ module.exports = {
     filename: '[name].bundle.js',
   },
   devtool: 'inline-source-map',
-   devServer: {
+  devServer: {
     contentBase: path.resolve(__dirname, "dist"),
     watchContentBase: true,
     compress: true,
     writeToDisk: true,
-    // hot: true,
-   },
+  },
    node: {
+    net: 'empty',
     fs: 'empty'
   },
   plugins: [

@@ -1,4 +1,4 @@
-const cacheVersion = '7';
+const cacheVersion = '3';
 const STATIC_CACHE = `restaurant-cache-v${cacheVersion}`;
 const IMAGES_CACHE = `images_cache-v`;
 const allCaches = [
@@ -59,14 +59,9 @@ self.addEventListener('install', event => {
         './restaurant.bundle.js',
         './restaurant.html',
         './index.html',
-        './smfssf',
       ]).catch(error => {
-        console.log('error with cache');
-        return new Response("Application is not connected to the internet", {
-          status: 404,
-          statusText: "Application is not connected to the internet"
-        });
-      }).then(() => {console.log('cache successeful')});
+        console.log('error setting up install event for sw');
+      });
     })
   );
 });
@@ -75,11 +70,15 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
+      console.log('Clearing Old Caches');
       return Promise.all(
         cacheNames.filter(cacheName => {
           return cacheName.startsWith('restaurant-') &&
                  cacheName != STATIC_CACHE;
-        }).map(cacheName => caches.delete(cacheName))
+        }).map(cacheName => {
+          console.log(`Deleting ${cacheName}`);
+          return caches.delete(cacheName);
+        })
       );
     })
   );
@@ -184,7 +183,7 @@ const handleNonAJAXEvent = (event) => {
   // it.
   event.respondWith(
     caches.match(event.request).then(response => {
-      return (response || fetch(event.request).then(fetchResponse => {
+      return response || fetch(event.request).then(fetchResponse => {
         let useCache = isImageURL(event.request.url) ?  IMAGES_CACHE : STATIC_CACHE;
         return caches
           .open(useCache)
@@ -197,7 +196,20 @@ const handleNonAJAXEvent = (event) => {
           status: 404,
           statusText: "Application is not connected to the internet"
         });
-      }));
+      });
     })
   );
+
+  // event.waitUntil(update(event.request));
 }
+
+// const update = (request) => {
+//   let useCache = isImageURL(request.url) ?  IMAGES_CACHE : STATIC_CACHE;
+//   console.log(useCache);
+//   return caches.open(useCache).then(cache => {
+//     return fetch(request).then(response => {
+//       console.log('updating the cache');
+//       return cache.put(request, response);
+//     });
+//   });
+// }
