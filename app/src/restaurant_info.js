@@ -43,22 +43,6 @@ const initMap = () => {
   DBHelper.nextPending();
 }
 
-/* window.initMap = () => {
-  fetchRestaurantFromURL((error, restaurant) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      self.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
-        center: restaurant.latlng,
-        scrollwheel: false
-      });
-      fillBreadcrumb();
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-    }
-  });
-} */
-
 /**
  * Get current restaurant from page URL.
  */
@@ -81,7 +65,7 @@ const fetchRestaurantFromURL = (callback) => {
         return;
       }
       fillRestaurantHTML();
-      callback(null, restaurant)
+      callback(null, restaurant);
     });
   }
 }
@@ -196,15 +180,14 @@ const fillBreadcrumb = (restaurant=self.restaurant) => {
  * Get a parameter by name from page URL.
  */
 const getParameterByName = (name, url) => {
-  if (!url)
-    url = window.location.href;
+  let x = new URL(window.location.href);
+  if (!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, '\\$&');
+  console.log(url);
   const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
-    results = regex.exec(url);
-  if (!results)
-    return null;
-  if (!results[2])
-    return '';
+  results = regex.exec(url);
+  console.log(results);
+  if (!results[2]) return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
@@ -225,6 +208,9 @@ const submitReview = () => {
     return;
   }
   formData.restaurant_id = self.restaurant.id;
+  formData.createdAt = Date.now();
+  formData.updatedAt = Date.now();
+  console.log(formData);
   DBHelper.saveNewReview(formData).then( result => {
     console.log(result);
     let alertMsg = 'Created Review';

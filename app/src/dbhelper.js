@@ -2,28 +2,28 @@
  * Common database helper functions.
  */
 import { openDB, deleteDB, wrap, unwrap } from 'idb';
-import {dbPromise} from '../sw.js';
+// import {dbPromise} from '../sw.js';
 
-// const dbPromise = openDB('rr-db', 3, {
-//   upgrade(db, oldVersion) {
-//     switch (oldVersion) {
-//       case 0:
-//         const store = db.createObjectStore('restaurants', { keyPath: 'id', });
-//         store.createIndex('id', 'id');
-//       case 1:
-//         const reviewsStore = db.createObjectStore('reviews', {
-//           keyPath: 'id',
-//           autoIncrement: true
-//         });
-//         reviewsStore.createIndex("restaurant_id", "restaurant_id");
-//       case 2:
-//         const pendingStore = db.createObjectStore('pending', {
-//           keyPath: 'id',
-//           autoIncrement: true
-//         })
-//     }
-//   }
-// });
+const dbPromise = openDB('rr-db', 3, {
+  upgrade(db, oldVersion) {
+    switch (oldVersion) {
+      case 0:
+        const store = db.createObjectStore('restaurants', { keyPath: 'id', });
+        store.createIndex('id', 'id');
+      case 1:
+        const reviewsStore = db.createObjectStore('reviews', {
+          keyPath: 'id',
+          autoIncrement: true
+        });
+        reviewsStore.createIndex("restaurant_id", "restaurant_id");
+      case 2:
+        const pendingStore = db.createObjectStore('pending', {
+          keyPath: 'id',
+          autoIncrement: true
+        })
+    }
+  }
+});
 
 export default class DBHelper {
 
@@ -191,7 +191,7 @@ export default class DBHelper {
    * Restaurant page URL.
    */
   static urlForRestaurant(restaurant) {
-    return (`./restaurant.html?id=${restaurant.id}`);
+    return (`/restaurant.html?id=${restaurant.id}`);
   }
 
   /**

@@ -57,6 +57,7 @@ self.addEventListener('install', event => {
         '/',
         './app.bundle.js',
         './restaurant.bundle.js',
+        './img/rr_icon.png',
       ]).catch(error => {
         console.log('error setting up install event for sw');
       });
@@ -64,17 +65,15 @@ self.addEventListener('install', event => {
   );
 });
 
-//clean unused caches starting with restaurant
+// Clean unused caches with names starting with restaurant
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
-      console.log('Clearing Old Caches');
       return Promise.all(
         cacheNames.filter(cacheName => {
           return cacheName.startsWith('restaurant-') &&
                  cacheName != STATIC_CACHE;
         }).map(cacheName => {
-          console.log(`Deleting ${cacheName}`);
           return caches.delete(cacheName);
         })
       );
@@ -204,10 +203,8 @@ const handleNonAJAXEvent = (event) => {
 
 const update = (request) => {
   let useCache = isImageURL(request.url) ?  IMAGES_CACHE : STATIC_CACHE;
-  console.log(useCache);
   return caches.open(useCache).then(cache => {
     return fetch(request).then(response => {
-      console.log('updating the cache');
       return cache.put(request, response);
     });
   });
