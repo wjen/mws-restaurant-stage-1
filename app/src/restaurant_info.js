@@ -192,8 +192,6 @@ const getParameterByName = (name, url) => {
 }
 
 const submitReview = () => {
-  console.log('submit review function');
-
   let formData = getFormValues();
   if(!/[a-zA-Z]{2,}$/gi.test(formData.name)) {
     alert('name input must be letters only, minimum of 2 characters');
@@ -210,18 +208,15 @@ const submitReview = () => {
   formData.restaurant_id = self.restaurant.id;
   formData.createdAt = Date.now();
   formData.updatedAt = Date.now();
-  console.log(formData);
   DBHelper.saveNewReview(formData).then( result => {
-    console.log(result);
     let alertMsg = 'Created Review';
     alert(alertMsg);
     let new_review_block = createReviewHTML(result);
     const ul = document.getElementById('reviews-list');
     ul.appendChild(new_review_block);
     var element = document.getElementById(`review-li-${result.id}`);
-    if(element.scrollIntoView && element.scrollIntoView.constructor === Function) {
-      element.scrollIntoView(true);
-    }
+    element.scrollIntoView(true);
+    resetFormValues();
   });
 }
 
@@ -231,5 +226,11 @@ const getFormValues = () => {
     rating: document.getElementById('rating').value.trim(),
     comments: document.getElementById('review-field').value.trim()
   }
+}
+
+const resetFormValues = () => {
+  document.getElementById('name').value = '';
+  document.getElementById('rating').value = '';
+  document.getElementById('review-field').value = '';
 }
 

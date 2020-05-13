@@ -2,28 +2,28 @@
  * Common database helper functions.
  */
 import { openDB, deleteDB, wrap, unwrap } from 'idb';
-// import {dbPromise} from '../sw.js';
+import {dbPromise} from '../sw.js';
 
-const dbPromise = openDB('rr-db', 3, {
-  upgrade(db, oldVersion) {
-    switch (oldVersion) {
-      case 0:
-        const store = db.createObjectStore('restaurants', { keyPath: 'id', });
-        store.createIndex('id', 'id');
-      case 1:
-        const reviewsStore = db.createObjectStore('reviews', {
-          keyPath: 'id',
-          autoIncrement: true
-        });
-        reviewsStore.createIndex("restaurant_id", "restaurant_id");
-      case 2:
-        const pendingStore = db.createObjectStore('pending', {
-          keyPath: 'id',
-          autoIncrement: true
-        })
-    }
-  }
-});
+// const dbPromise = openDB('rr-db', 3, {
+//   upgrade(db, oldVersion) {
+//     switch (oldVersion) {
+//       case 0:
+//         const store = db.createObjectStore('restaurants', { keyPath: 'id', });
+//         store.createIndex('id', 'id');
+//       case 1:
+//         const reviewsStore = db.createObjectStore('reviews', {
+//           keyPath: 'id',
+//           autoIncrement: true
+//         });
+//         reviewsStore.createIndex("restaurant_id", "restaurant_id");
+//       case 2:
+//         const pendingStore = db.createObjectStore('pending', {
+//           keyPath: 'id',
+//           autoIncrement: true
+//         })
+//     }
+//   }
+// });
 
 export default class DBHelper {
 
@@ -223,7 +223,6 @@ export default class DBHelper {
     return dbPromise.then( db => {
       const tx = db.transaction('reviews', 'readwrite');
       const store = tx.objectStore('reviews');
-      console.log('putting review in store');
       store.put(formData);
       console.log('successfully put review in store');
       return tx.done;
@@ -247,7 +246,7 @@ export default class DBHelper {
       dbPromise.then(db => {
       const tx = db.transaction('pending', 'readwrite');
       const store = tx.objectStore('pending');
-      store.put({
+      return store.put({
         data: {
           url,
           method,
@@ -266,7 +265,7 @@ export default class DBHelper {
   static nextPending(callback) {
     DBHelper.attemptCommitPending(DBHelper.nextPending).then(j => {
       console.log(j);
-      callback(null, j);
+      return callback(null, j);
     });
   }
 
@@ -286,8 +285,8 @@ export default class DBHelper {
       const store = tx.objectStore('pending');
       store.openCursor().then( cursor => {
         if (!cursor) {
-            return;
-          }
+          return;
+        }
         const value = cursor.value;
         url = cursor.value.data.url;
         method = cursor.value.data.method;
@@ -299,7 +298,7 @@ export default class DBHelper {
         if ((!url || !method) || (method === "POST" && !body)) {
           cursor
             .delete()
-            .then(callback());
+            .then(callback);
           return;
         };
 
@@ -329,7 +328,11 @@ export default class DBHelper {
             })
           console.log('deleted item from pending store');
         }).catch(error => {
+          console.log('this is the response and we are offline but next next pending');
           console.log(error);
+          DBHelper.fetchReviews(restaurant.id, (error, reviews) => {
+            fillReviewsHTML(reviews);
+          });
           return;
         })
       })
