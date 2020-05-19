@@ -3,6 +3,7 @@ import DBHelper from './dbhelper';
 let restaurant;
 let submitBtn;
 var newMap;
+import {dbPromise} from '../sw.js';
 
 /**
  * Initialize map as soon as the page is loaded.
@@ -12,7 +13,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
   submitBtn = document.getElementById('submit-form-btn');
   submitBtn.addEventListener('click', submitReview);
-});
+
+  //check for pending reviews on page load and pop
+  DBHelper.nextPending();
+ });
 
 /**
  * Initialize leaflet map
@@ -40,7 +44,6 @@ const initMap = () => {
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.newMap);
     }
   });
-  DBHelper.nextPending();
 }
 
 /**
@@ -122,7 +125,11 @@ const fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hour
  * Create all reviews HTML and add them to the webpage.
  */
 const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+  console.log(reviews);
   const container = document.getElementById('reviews-container');
+
+  // Reset the container on every call to prevent duplication
+  container.innerHTML = '';
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
@@ -133,7 +140,9 @@ const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     container.appendChild(noReviews);
     return;
   }
-  const ul = document.getElementById('reviews-list');
+  // const ul = document.getElementById('reviews-list');
+  const ul = document.createElement('ul');
+  ul.id = 'reviews-list';
   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
@@ -161,7 +170,6 @@ const createReviewHTML = (review) => {
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
   li.appendChild(comments);
-
 
   return li;
 }
@@ -217,6 +225,20 @@ const submitReview = () => {
     var element = document.getElementById(`review-li-${result.id}`);
     element.scrollIntoView(true);
     resetFormValues();
+  }).catch(error => {
+    console.log(`${error}: reloading reviews from db`);
+    const section = document.getElementById('reviews-container');
+    dbPromise.then(db => {
+      return db
+        .transaction('reviews')
+        .objectStore('reviews')
+        .index('restaurant_id')
+        .getAll(formData.restaurant_id);
+    }).then(reviews => {
+        console.log(reviews);
+        fillReviewsHTML(reviews);
+    })
+
   });
 }
 

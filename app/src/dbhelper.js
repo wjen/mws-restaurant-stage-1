@@ -236,12 +236,13 @@ export default class DBHelper {
     const url = DBHelper.DATABASE_REVIEWS_URL;
     const method = "POST";
     DBHelper.updateCachedRestaurantReview(formData);
-    return DBHelper.addPendingRequestToQue(url, method, formData).then(json => json);
+    return DBHelper.addPendingRequestToQue(url, method, formData);
 
   }
 
   static addPendingRequestToQue(url, method, formData) {
     //open database and add request details to the pending store
+    console.log('addpendingrequesttoque function starting');
     return new Promise((resolve, reject) => {
       dbPromise.then(db => {
       const tx = db.transaction('pending', 'readwrite');
@@ -256,7 +257,9 @@ export default class DBHelper {
     }).catch(error => {
       console.log(error);
     }).then(DBHelper.nextPending((error, json) => {
-      console.log(json);
+      if (error) {
+        return reject(error);
+      }
       return resolve(json);
     }));
   });
@@ -265,7 +268,12 @@ export default class DBHelper {
   static nextPending(callback) {
     DBHelper.attemptCommitPending(DBHelper.nextPending).then(j => {
       console.log(j);
-      return callback(null, j);
+      callback(null, j);
+    }).catch(error => {
+      console.log(error);
+      if (callback) {
+        callback(error);
+      }
     });
   }
 
@@ -275,69 +283,71 @@ export default class DBHelper {
     let method;
     let body;
 
-    return new Promise( (resolve, reject) => { dbPromise.then(db => {
-      if (!db.objectStoreNames.length) {
-        console.log("DB not available");
-        db.close();
-        return;
-      }
-      const tx = db.transaction('pending', 'readwrite');
-      const store = tx.objectStore('pending');
-      store.openCursor().then( cursor => {
-        if (!cursor) {
+    return new Promise( (resolve, reject) => {
+      dbPromise.then(db => {
+        if (!db.objectStoreNames.length) {
+          console.log("DB not available");
+          db.close();
           return;
         }
-        const value = cursor.value;
-        url = cursor.value.data.url;
-        method = cursor.value.data.method;
-        body = cursor.value.data.formData;
-
-
-        // If we don't have a parameter then we're on a bad record that should be tossed
-        // and then move on
-        if ((!url || !method) || (method === "POST" && !body)) {
-          cursor
-            .delete()
-            .then(callback);
-          return;
-        };
-
-        const properties = {
-          body: JSON.stringify(body),
-          method: method
-        }
-        fetch(url, properties).then(response => {
-        // If we don't get a good response then assume we're offline
-          if (!response.ok && !response.redirected) {
-            console.log('this is the response and we are offline');
-            console.log(response);
+        const tx = db.transaction('pending', 'readwrite');
+        const store = tx.objectStore('pending');
+        store.openCursor().then( cursor => {
+          if (!cursor) {
+            console.log('no more cursors');
             return;
           }
-          return response.json();
-        }).then( j => {
-          const deltx = db.transaction('pending', 'readwrite');
-          const store = deltx.objectStore('pending');
-          store.openCursor()
-            .then( cursor => {
-              cursor.delete()
-              .then(() => {
-                callback();
-                console.log(j);
-                return resolve(j);
-              })
-            })
-          console.log('deleted item from pending store');
-        }).catch(error => {
-          console.log('this is the response and we are offline but next next pending');
-          console.log(error);
-          DBHelper.fetchReviews(restaurant.id, (error, reviews) => {
-            fillReviewsHTML(reviews);
+          const value = cursor.value;
+          url = cursor.value.data.url;
+          method = cursor.value.data.method;
+          body = cursor.value.data.formData;
+
+
+          // If we don't have a parameter then we're on a bad record that should be tossed
+          // and then move on
+          if ((!url || !method) || (method === "POST" && !body)) {
+            cursor
+              .delete()
+              .then(callback);
+              console.log('deleted a bad cursor');
+            return;
+          };
+
+          const properties = {
+            body: JSON.stringify(body),
+            method: method
+          }
+
+          fetch(url, properties).then(response => {
+            console.log(response);
+          // If we don't get a good response then assume we're offline
+            if (!response.ok && !response.redirected) {
+              console.log('this is the response and we are offline');
+              console.log(response);
+              return;
+            }
+            return response.json().then(json => {
+              const deltx = db.transaction('pending', 'readwrite');
+              const store = deltx.objectStore('pending');
+              store.openCursor()
+              .then( cursor => {
+                cursor.delete()
+                .then(() => {
+                  console.log('deleted item from pending store');
+                  callback();
+                  console.log(json);
+                  return resolve(json);
+                });
+              });
+            });
+          }).catch(error => {
+            console.log('error fetching no internet');
+            console.log(error);
+            return reject('no network');
           });
-          return;
-        })
-      })
-    })
-    })
+        });
+      });
+    });
   }
 
   static syncRestaurant(restaurant) {
@@ -350,6 +360,7 @@ export default class DBHelper {
        console.log('error updating restaurant backend data...', e, restaurant);
      }
   }
+
      static updateRestaurantInDB(new_restaurant) {
        return dbPromise.then(function(db){
          let tx = db.transaction('restaurants', 'readwrite');
@@ -386,4 +397,6 @@ export default class DBHelper {
   }
 
 }
+
+
 

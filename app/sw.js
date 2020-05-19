@@ -86,7 +86,6 @@ self.addEventListener('fetch', event => {
   let checkUrl = new URL(event.request.url);
   if (checkUrl.port === "1337") {
     let id = checkUrl.searchParams.get('restaurant_id') - 0;
-    console.log(id);
     return handleAJAXEvent(event, id);
   } else {
     handleNonAJAXEvent(event);
@@ -96,7 +95,11 @@ self.addEventListener('fetch', event => {
 const handleAJAXEvent = (event, id) => {
   // Only use for caching for Get events
   if(event.request.method !== "GET") {
-    event.respondWith( fetch(event.request))
+    console.log(event.request);
+    console.log(event);
+    event.respondWith(
+      fetch(event.request)
+    )
   } else if(event.request.url.indexOf("restaurants") > -1) {
     handleRestaurantEvents(event);
   } else {
@@ -113,6 +116,7 @@ const handleRestaurantEvents = (event) => {
           .objectStore('restaurants')
           .getAll();
       }).then(data => {
+        console.log('responding from handlerestaurantevents from serviceworker');
         return ((data.length && data) || getRestaurants(event)
           .then( restaurants => {
             console.log('fetched now storing');
@@ -187,7 +191,7 @@ const handleNonAJAXEvent = (event) => {
           .then(cache => {
             cache.put(event.request, fetchResponse.clone());
             return fetchResponse;
-        });
+          });
       }).catch(error => {
         return new Response("Application is not connected to the internet", {
           status: 404,
