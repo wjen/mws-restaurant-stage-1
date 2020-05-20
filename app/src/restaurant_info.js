@@ -226,6 +226,7 @@ const submitReview = () => {
     element.scrollIntoView(true);
     resetFormValues();
   }).catch(error => {
+    // If no network, fallback to get reviews from db
     console.log(`${error}: reloading reviews from db`);
     const section = document.getElementById('reviews-container');
     dbPromise.then(db => {

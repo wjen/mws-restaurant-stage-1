@@ -173,11 +173,8 @@ const createRestaurantHTML = (restaurant) => {
   address.innerHTML = restaurant.address;
   li.append(address);
 
-  console.log("is_favorite: ", restaurant["is_favorite"]);
-
   const favBtn = document.createElement('button');
-  const isFavorite = (restaurant["is_favorite"] && restaurant["is_favorite"].toString() === "true") ? true : false;
-  if(restaurant.is_favorite === "true" || restaurant.is_favorite === true) {
+  if (restaurant.is_favorite === "true" || restaurant.is_favorite === true) {
     favBtn.innerHTML = 'Favorited!';
     favBtn.style.background = 'hotpink';
   } else {
@@ -189,10 +186,8 @@ const createRestaurantHTML = (restaurant) => {
   favBtn.setAttribute("data-restaurant-id", restaurant.id);
 
   favBtn.addEventListener("click", () => {
-    console.log(`${restaurant.id} clicked favbtn`);
     DBHelper.toggleFavBtn(restaurant.id);
   })
-
 
   li.append(favBtn);
 

@@ -65,23 +65,6 @@ export default class DBHelper {
       });
   }
 
-  //   static fetchRestaurantReviewsById(id, callback) {
-  //   // Fetch all reviews for the specific restaurant
-  //   const fetchURL = DBHelper.DATABASE_REVIEWS_URL + "/?restaurant_id=" + id;
-  //   fetch(fetchURL, {method: "GET"}).then(response => {
-  //     if (!response.clone().ok && !response.clone().redirected) {
-  //       throw "No reviews available";
-  //     }
-  //     response
-  //       .json()
-  //       .then(result => {
-  //         callback(null, result);
-  //       })
-  //   }).catch(error => callback(error, null));
-  // }
-  /**
-   * Fetch a restaurant by its ID.
-   */
   static fetchRestaurantById(id, callback) {
     // fetch all restaurants with proper error handling.
     DBHelper.fetchRestaurants((error, restaurants) => {
@@ -255,7 +238,7 @@ export default class DBHelper {
         }
       })
     }).catch(error => {
-      console.log(error);
+      console.log(`Error putting data in pending db: ${error}`);
     }).then(DBHelper.nextPending((error, json) => {
       if (error) {
         return reject(error);
@@ -351,26 +334,23 @@ export default class DBHelper {
   }
 
   static syncRestaurant(restaurant) {
-     try {
        let url = `http://localhost:1337/restaurants/${restaurant.id}/?is_favorite=${restaurant.is_favorite}`;
-       let params = {method: 'PUT'};
-       return fetch(url, params).then(function(r){ return r.json() });
-     }
-     catch(e) {
-       console.log('error updating restaurant backend data...', e, restaurant);
-     }
+       let method = 'PUT';
+       DBHelper.addPendingRequestToQue(url, method).catch(error => {
+         console.log('error updating restaurant backend data...', error, restaurant);
+       });
   }
 
-     static updateRestaurantInDB(new_restaurant) {
-       return dbPromise.then(function(db){
-         let tx = db.transaction('restaurants', 'readwrite');
-         let store = tx.objectStore('restaurants');
-         store.put(new_restaurant);
-         return tx.complete
-       }).then(function(){
-          return Promise.resolve(new_restaurant);
-       });
-     }
+  static updateRestaurantInDB(new_restaurant) {
+    return dbPromise.then(function(db){
+      let tx = db.transaction('restaurants', 'readwrite');
+      let store = tx.objectStore('restaurants');
+      store.put(new_restaurant);
+      return tx.complete
+    }).then(function(){
+       return Promise.resolve(new_restaurant);
+    });
+  }
 
   static toggleFavBtn(restaurant_id) {
     return dbPromise.then( db => {
