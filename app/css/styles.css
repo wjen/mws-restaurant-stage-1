@@ -8,7 +8,7 @@
 
 /* Define base font-size here; most elements will inherit this. */
 html{
-    font-size:1em;      /* Assuming 16px... */
+    font-size: 16px;      /* Assuming 16px... */
     line-height:1.5;
     font-family: Arial, Helvetica, sans-serif;
     color: #333;
@@ -32,7 +32,7 @@ main, section {
 }
 ul, li {
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 10pt;
+	font-size: 1em;
 	color: #333;
 }
 a {
@@ -302,17 +302,17 @@ ul {
 }
 #restaurant-img {
 	width: 100%;
-  max-height: 80vh;
+  max-height: 60vh;
 }
 #restaurant-address {
-  font-size: 1.3em;
+  font-size: 1.1em;
   margin: 10px 0px;
   width: 50%;
 }
 #restaurant-cuisine {
   background-color: #333;
   color: #ddd;
-  font-size: 1.2em;
+  font-size: 1.1em;
   font-weight: 300;
   letter-spacing: 10px;
   margin: 0 0 20px;
@@ -353,7 +353,7 @@ ul {
   margin: 0 0 30px;
   overflow: hidden;
   padding: 10px 20px 20px;
-  /*position: relative;*/
+  position: relative;
   width: 100%;
 }
 #reviews-list li p {
@@ -386,15 +386,24 @@ ul {
 }
 
 .submit-form-button {
-    display:block;
-    color: white;
-    background: orange;
-    padding: 10px;
-    width: 20%;
-    margin: 10px;
-    text-align: center;
+  display:block;
+  color: white;
+  background: orange;
+  padding: 10px;
+  width: 20%;
+  margin: 10px;
+  text-align: center;
 }
 
+.review-btn {
+    margin: 0 16px 0 0;
+    padding: 0 10px 0 0;
+    border: none;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+
+}
 /*//////////
 // Media Queries
 //////////*/
@@ -421,7 +430,7 @@ ul {
     margin: 8px auto;
   }
   .navigation h1 a{
-    font-size: 2.6em;
+    font-size: 2em;
   }
   .navigation img {
     width: 30px;

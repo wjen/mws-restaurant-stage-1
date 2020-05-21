@@ -140,7 +140,6 @@ const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     container.appendChild(noReviews);
     return;
   }
-  // const ul = document.getElementById('reviews-list');
   const ul = document.createElement('ul');
   ul.id = 'reviews-list';
   reviews.forEach(review => {
@@ -170,6 +169,23 @@ const createReviewHTML = (review) => {
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
   li.appendChild(comments);
+
+  // Set up and use fontawesome icons for edit and delete
+  const editBtn = document.createElement('button');
+  const editIcon = document.createElement('i');
+  editBtn.setAttribute('aria-labelledby', `edit review ${review.id}`);
+  editBtn.classList.add('review-btn');
+  editIcon.classList.add('fas', 'fa-edit', 'fa-2x');
+  editBtn.append(editIcon);
+  li.appendChild(editBtn);
+
+  const deleteBtn = document.createElement('button');
+  const deleteIcon = document.createElement('i');
+  deleteBtn.setAttribute('aria-labelledby', `delete review ${review.id}`);
+  deleteBtn.classList.add('review-btn');
+  deleteIcon.classList.add('fas', 'fa-trash-alt', 'fa-2x');
+  deleteBtn.append(deleteIcon);
+  li.appendChild(deleteBtn);
 
   return li;
 }
