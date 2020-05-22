@@ -3,6 +3,7 @@ import DBHelper from './dbhelper';
 let restaurant;
 let submitBtn;
 var newMap;
+let editing = false;
 import {dbPromise} from '../sw.js';
 
 /**
@@ -220,7 +221,8 @@ const getParameterByName = (name, url) => {
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-const submitReview = (editing = false) => {
+const submitReview = () => {
+  console.log(editing);
   let formData = getFormValues();
   if(!/[a-zA-Z]{2,}$/gi.test(formData.name)) {
     alert('name input must be letters only, minimum of 2 characters');
@@ -282,9 +284,11 @@ const resetFormValues = () => {
 const cancelEditing = () => {
   document.getElementById('cancel-form-btn').style.display = 'none';
   resetFormValues();
+  editing = false;
 }
 
 const setEditing = (review) => {
+  editing = true;
   let cancelEditingBtn = document.getElementById('cancel-form-btn');
   cancelEditingBtn.style.display = 'block';
   cancelEditingBtn.addEventListener('click', () => cancelEditing() );

@@ -216,7 +216,7 @@ export default class DBHelper {
     // btn.onclick = null;
     console.log(editing);
     const url = DBHelper.DATABASE_REVIEWS_URL;
-    const method = editing ? "POST" : "PUT";
+    const method = editing ? "PUT" : "POST";
     DBHelper.updateCachedRestaurantReview(formData);
     return DBHelper.addPendingRequestToQue(url, method, formData);
 
