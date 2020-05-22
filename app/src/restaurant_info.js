@@ -184,6 +184,7 @@ const createReviewHTML = (review) => {
   deleteBtn.setAttribute('aria-labelledby', `delete review ${review.id}`);
   deleteBtn.classList.add('review-btn');
   deleteIcon.classList.add('fas', 'fa-trash-alt', 'fa-2x');
+  deleteBtn.addEventListener('click', () => deleteReview(review));
   deleteBtn.append(deleteIcon);
   li.appendChild(deleteBtn);
 
@@ -273,3 +274,12 @@ const resetFormValues = () => {
   document.getElementById('review-field').value = '';
 }
 
+
+const deleteReview = (review) => {
+  console.log(review);
+  let ask = window.confirm(`delete ${review.name}'s review?`);
+  if (ask === false) { return }
+  DBHelper.deleteReview(review.id).then(() => {
+    document.getElementById(`review-li-${review.id}`).remove();
+  });
+}

@@ -21,8 +21,8 @@
           "Sunday": "12:00 pm - 3:00 pm, 5:00 pm - 11:00 pm"
         },
         "createdAt": 1504095568414,
-        "updatedAt": "2020-05-20T22:06:32.891Z",
-        "is_favorite": "false",
+        "updatedAt": "2020-05-21T01:39:19.358Z",
+        "is_favorite": "true",
         "id": 2
       },
       {
@@ -515,7 +515,7 @@
       "id": 10
     },
     "reviews": {
-      "id": 1011
+      "id": 1016
     }
   }
 }

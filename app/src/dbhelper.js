@@ -376,7 +376,26 @@ export default class DBHelper {
     })
   }
 
-}
+  static deleteCachedReview(review_id) {
+    return dbPromise.then(db => {
+      let tx = db.transaction('reviews', 'readwrite')
+      let store =  tx.objectStore('reviews');
+      store.delete(review_id);
+      console.log('deleted review from idb');
+      return tx.complete;
+    }).catch(error => {
+      console.log('error deleting review: ', error);
+    });
+  }
 
+
+  static deleteReview(review_id) {
+    const url = `${DBHelper.DATABASE_REVIEWS_URL}/${review_id}`;
+    console.log(url);
+    const method = "DELETE";
+    DBHelper.deleteCachedReview(review_id);
+    return DBHelper.addPendingRequestToQue(url, method);
+  }
+}
 
 
