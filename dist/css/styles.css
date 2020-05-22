@@ -402,8 +402,12 @@ ul {
     width: 48px;
     height: 48px;
     cursor: pointer;
-
 }
+
+input, textarea {
+  font-size: 1em;
+}
+
 /*//////////
 // Media Queries
 //////////*/

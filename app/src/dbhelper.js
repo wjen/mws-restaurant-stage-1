@@ -210,12 +210,13 @@ export default class DBHelper {
     })
   }
 
-  static saveNewReview(formData) {
+  static submitReview(formData, editing) {
     // Block any more clicks on the submit button until the callback
     // const btn = document.getElementById("submit-form-btn");
     // btn.onclick = null;
+    console.log(editing);
     const url = DBHelper.DATABASE_REVIEWS_URL;
-    const method = "POST";
+    const method = editing ? "POST" : "PUT";
     DBHelper.updateCachedRestaurantReview(formData);
     return DBHelper.addPendingRequestToQue(url, method, formData);
 

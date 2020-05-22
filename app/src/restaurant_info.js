@@ -176,6 +176,7 @@ const createReviewHTML = (review) => {
   editBtn.setAttribute('aria-labelledby', `edit review ${review.id}`);
   editBtn.classList.add('review-btn');
   editIcon.classList.add('fas', 'fa-edit', 'fa-2x');
+  editBtn.addEventListener('click', () => setEditing(review));
   editBtn.append(editIcon);
   li.appendChild(editBtn);
 
@@ -216,7 +217,7 @@ const getParameterByName = (name, url) => {
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-const submitReview = () => {
+const submitReview = (editing = false) => {
   let formData = getFormValues();
   if(!/[a-zA-Z]{2,}$/gi.test(formData.name)) {
     alert('name input must be letters only, minimum of 2 characters');
@@ -233,7 +234,8 @@ const submitReview = () => {
   formData.restaurant_id = self.restaurant.id;
   formData.createdAt = Date.now();
   formData.updatedAt = Date.now();
-  DBHelper.saveNewReview(formData).then( result => {
+
+  DBHelper.submitReview(formData, editing).then( result => {
     let alertMsg = 'Created Review';
     alert(alertMsg);
     let new_review_block = createReviewHTML(result);
@@ -253,8 +255,8 @@ const submitReview = () => {
         .index('restaurant_id')
         .getAll(formData.restaurant_id);
     }).then(reviews => {
-        console.log(reviews);
-        fillReviewsHTML(reviews);
+      console.log(reviews);
+      fillReviewsHTML(reviews);
     })
 
   });
@@ -274,6 +276,15 @@ const resetFormValues = () => {
   document.getElementById('review-field').value = '';
 }
 
+const setEditing = (review) => {
+  let editing = true;
+  document.getElementById('name').value = review.name;
+  document.getElementById('rating').value = review.rating;
+  document.getElementById('review-field').value = review.comments;
+  let review_id = review.id;
+  goToBottom();
+}
+
 
 const deleteReview = (review) => {
   let ask = window.confirm(`delete ${review.name}'s review?`);
@@ -284,4 +295,8 @@ const deleteReview = (review) => {
     console.log('request put into que');
     document.getElementById(`review-li-${review.id}`).remove();
   });
+}
+
+const goToBottom = () => {
+  window.scrollTo(0, document.body.scrollHeight);
 }
