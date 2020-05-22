@@ -385,7 +385,7 @@ ul {
   width: 50%;
 }
 
-.submit-form-button {
+.form-button {
   display:block;
   color: white;
   background: orange;
@@ -393,6 +393,15 @@ ul {
   width: 20%;
   margin: 10px;
   text-align: center;
+}
+
+.form-submit {
+  background: orange;
+}
+
+.form-cancel {
+  display: none;
+  background: red;
 }
 
 .review-btn {

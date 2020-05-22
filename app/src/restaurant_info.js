@@ -3,7 +3,6 @@ import DBHelper from './dbhelper';
 let restaurant;
 let submitBtn;
 var newMap;
-let editing = false;
 import {dbPromise} from '../sw.js';
 
 /**
@@ -280,8 +279,15 @@ const resetFormValues = () => {
   document.getElementById('review-field').value = '';
 }
 
+const cancelEditing = () => {
+  document.getElementById('cancel-form-btn').style.display = 'none';
+  resetFormValues();
+}
+
 const setEditing = (review) => {
-  editing = true;
+  let cancelEditingBtn = document.getElementById('cancel-form-btn');
+  cancelEditingBtn.style.display = 'block';
+  cancelEditingBtn.addEventListener('click', () => cancelEditing() );
   document.getElementById('name').value = review.name;
   document.getElementById('rating').value = review.rating;
   document.getElementById('review-field').value = review.comments;
