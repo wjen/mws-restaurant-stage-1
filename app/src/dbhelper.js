@@ -44,8 +44,6 @@ export default class DBHelper {
   /**
    * Fetch all restaurants.
    */
-
-
   static fetchRestaurants(callback) {
     fetch(DBHelper.DATABASE_URL).then(function(response) {
       response.json().then(function(restaurants) {
@@ -225,7 +223,6 @@ export default class DBHelper {
 
   static addPendingRequestToQue(url, method, formData) {
     //open database and add request details to the pending store
-    console.log('addpendingrequesttoque function starting');
     return new Promise((resolve, reject) => {
       dbPromise.then(db => {
       const tx = db.transaction('pending', 'readwrite');
@@ -303,7 +300,7 @@ export default class DBHelper {
 
           fetch(url, properties).then(response => {
             console.log(response);
-          // If we don't get a good response then assume we're offline
+
             if (!response.ok && !response.redirected) {
               console.log('this is the response and we are offline');
               console.log(response);
@@ -324,7 +321,6 @@ export default class DBHelper {
               });
             });
           }).catch(error => {
-            console.log('error fetching no internet');
             console.log(error);
             return reject('no network');
           });

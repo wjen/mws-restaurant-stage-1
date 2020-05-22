@@ -277,7 +277,7 @@ ul {
 }
 .inside #map-container {
   /*background: blue none repeat scroll 0 0;*/
-  height: 200px;
+  height: 300px;
   padding-bottom: 10px;
 }
 .inside #map {

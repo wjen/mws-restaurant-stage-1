@@ -276,10 +276,12 @@ const resetFormValues = () => {
 
 
 const deleteReview = (review) => {
-  console.log(review);
   let ask = window.confirm(`delete ${review.name}'s review?`);
   if (ask === false) { return }
   DBHelper.deleteReview(review.id).then(() => {
+    document.getElementById(`review-li-${review.id}`).remove();
+  }).catch(error => {
+    console.log('request put into que');
     document.getElementById(`review-li-${review.id}`).remove();
   });
 }
