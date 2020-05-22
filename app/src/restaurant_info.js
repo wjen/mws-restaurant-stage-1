@@ -3,6 +3,7 @@ import DBHelper from './dbhelper';
 let restaurant;
 let submitBtn;
 var newMap;
+let editing = false;
 import {dbPromise} from '../sw.js';
 
 /**
@@ -174,7 +175,9 @@ const createReviewHTML = (review) => {
   const editBtn = document.createElement('button');
   const editIcon = document.createElement('i');
   editBtn.setAttribute('aria-labelledby', `edit review ${review.id}`);
+  editBtn.setAttribute('title', `edit review button`);
   editBtn.classList.add('review-btn');
+  editBtn.title = 'start editing button';
   editIcon.classList.add('fas', 'fa-edit', 'fa-2x');
   editBtn.addEventListener('click', () => setEditing(review));
   editBtn.append(editIcon);
@@ -183,6 +186,7 @@ const createReviewHTML = (review) => {
   const deleteBtn = document.createElement('button');
   const deleteIcon = document.createElement('i');
   deleteBtn.setAttribute('aria-labelledby', `delete review ${review.id}`);
+  deleteBtn.setAttribute('title', `delete review button`);
   deleteBtn.classList.add('review-btn');
   deleteIcon.classList.add('fas', 'fa-trash-alt', 'fa-2x');
   deleteBtn.addEventListener('click', () => deleteReview(review));
@@ -277,7 +281,7 @@ const resetFormValues = () => {
 }
 
 const setEditing = (review) => {
-  let editing = true;
+  editing = true;
   document.getElementById('name').value = review.name;
   document.getElementById('rating').value = review.rating;
   document.getElementById('review-field').value = review.comments;
