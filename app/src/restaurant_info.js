@@ -163,6 +163,12 @@ const createReviewHTML = (review) => {
   date.innerHTML = '<strong>Created:</strong> ' + (new Date(review.createdAt)).toDateString();
   li.appendChild(date);
 
+  if (review.createdAt !== review.updatedAt) {
+    const updateDate = document.createElement('p');
+    updateDate.innerHTML = '<strong>Updated:</strong> ' + (new Date(review.updatedAt)).toDateString();
+    li.appendChild(updateDate);
+  }
+
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;
   li.appendChild(rating);
@@ -236,16 +242,25 @@ const submitReview = () => {
     alert('comments input must be minimum of 3 characters');
     return;
   }
-  formData.restaurant_id = self.restaurant.id;
-  formData.createdAt = Date.now();
-  formData.updatedAt = Date.now();
+
+  if (editing) {
+    formData.updatedAt = Date.now();
+  } else {
+    formData.id = Date.now();
+  }
 
   DBHelper.submitReview(formData, editing).then( result => {
-    let alertMsg = 'Created Review';
+    let alertMsg = editing ? 'Edited Review' : 'Created Review';
     alert(alertMsg);
-    let new_review_block = createReviewHTML(result);
-    const ul = document.getElementById('reviews-list');
-    ul.appendChild(new_review_block);
+    let newReviewElem = createReviewHTML(result);
+    if (editing) {
+      let oldReviewElem = document.getElementById(`review-li-${result.id}`);
+      let parentElem = oldReviewElem.parentElement;
+      parentElem.replaceChild(newReviewElem, oldReviewElem);
+    } else {
+      const ul = document.getElementById('reviews-list');
+      ul.appendChild(new_review_block);
+    }
     var element = document.getElementById(`review-li-${result.id}`);
     element.scrollIntoView(true);
     resetFormValues();
@@ -276,6 +291,7 @@ const getFormValues = () => {
 }
 
 const resetFormValues = () => {
+  editing = false;
   document.getElementById('name').value = '';
   document.getElementById('rating').value = '';
   document.getElementById('review-field').value = '';
@@ -288,7 +304,7 @@ const cancelEditing = () => {
 }
 
 const setEditing = (review) => {
-  editing = true;
+  editing = review;
   let cancelEditingBtn = document.getElementById('cancel-form-btn');
   cancelEditingBtn.style.display = 'block';
   cancelEditingBtn.addEventListener('click', () => cancelEditing() );

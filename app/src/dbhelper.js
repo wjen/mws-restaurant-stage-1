@@ -13,7 +13,6 @@ import {dbPromise} from '../sw.js';
 //       case 1:
 //         const reviewsStore = db.createObjectStore('reviews', {
 //           keyPath: 'id',
-//           autoIncrement: true
 //         });
 //         reviewsStore.createIndex("restaurant_id", "restaurant_id");
 //       case 2:
@@ -210,16 +209,35 @@ export default class DBHelper {
     })
   }
 
+  static editReview(formData, editing) {
+    return dbPromise.then(db => {
+      let tx = db.transaction('reviews');
+      let store = tx.objectStore('reviews');
+      return store.get(editing.id);
+    }).then( review => {
+      return dbPromise.then(db => {
+        let tx = db.transaction('reviews', 'readwrite');
+        let store = tx.objectStore('reviews');
+        let newReview = Object.assign({}, review, formData);
+        store.put(newReview);
+        return tx.complete;
+      })
+    });
+  }
+
   static submitReview(formData, editing) {
     // Block any more clicks on the submit button until the callback
     // const btn = document.getElementById("submit-form-btn");
     // btn.onclick = null;
     console.log(editing);
-    const url = DBHelper.DATABASE_REVIEWS_URL;
     const method = editing ? "PUT" : "POST";
-    DBHelper.updateCachedRestaurantReview(formData);
+    const url = editing ? `${DBHelper.DATABASE_REVIEWS_URL}/${editing.id}` : DBHelper.DATABASE_REVIEWS_URL;
+    if (editing) {
+      DBHelper.editReview(formData, editing);
+    } else {
+      DBHelper.updateCachedRestaurantReview(formData);
+    }
     return DBHelper.addPendingRequestToQue(url, method, formData);
-
   }
 
   static addPendingRequestToQue(url, method, formData) {
@@ -239,6 +257,7 @@ export default class DBHelper {
       console.log(`Error putting data in pending db: ${error}`);
     }).then(DBHelper.nextPending((error, json) => {
       if (error) {
+        console.log(error);
         return reject(error);
       }
       return resolve(json);
@@ -279,10 +298,9 @@ export default class DBHelper {
             return;
           }
           const value = cursor.value;
-          url = cursor.value.data.url;
-          method = cursor.value.data.method;
-          body = cursor.value.data.formData;
-
+          url = value.data.url;
+          method = value.data.method;
+          body = value.data.formData;
 
           // If we don't have a parameter then we're on a bad record that should be tossed
           // and then move on
@@ -310,10 +328,11 @@ export default class DBHelper {
             return response.json().then(json => {
               const deltx = db.transaction('pending', 'readwrite');
               const store = deltx.objectStore('pending');
-              store.openCursor()
+              return store.openCursor()
               .then( cursor => {
-                cursor.delete()
+                return cursor.delete()
                 .then(() => {
+                  console.log(cursor.value);
                   console.log('deleted item from pending store');
                   callback();
                   console.log(json);
@@ -392,6 +411,18 @@ export default class DBHelper {
     const method = "DELETE";
     DBHelper.deleteCachedReview(review_id);
     return DBHelper.addPendingRequestToQue(url, method);
+  }
+
+  static deleteTempReview(temp_id) {
+    dbPromise.then(db => {
+      let tx = db.transaction('reviews', 'readwrite')
+      let store = tx.objectStore('reviews');
+      store.delete(temp_id);
+      console.log('deleted oldversion of review with old id');
+      return tx.complete;
+    }).catch( error => {
+      console.log('error deleting temp review: ', error);
+    })
   }
 }
 

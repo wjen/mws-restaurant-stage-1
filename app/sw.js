@@ -17,7 +17,7 @@ const dbPromise = openDB('rr-db', 3, {
       case 1:
         const reviewsStore = db.createObjectStore('reviews', {
           keyPath: 'id',
-          autoIncrement: true
+          // autoIncrement: true
         });
         reviewsStore.createIndex("restaurant_id", "restaurant_id");
       case 2:

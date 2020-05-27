@@ -273,15 +273,6 @@
         "comments": "The tables at this 32nd Street favorite are outfitted with grills for cooking short ribs, brisket, beef tongue, rib eye, and pork jowl. The banchan plates are uniformly good, and Deuki Hongâ€™s menu also includes winning dishes like stir-fried squid noodles, kimchi stew, and seafood pancakes. If itâ€™s available, make sure to order the kimchi and rice â€œlunchbox.â€ Baekjeong is a great place for large groups and birthday parties."
       },
       {
-        "id": 8,
-        "restaurant_id": 3,
-        "name": "ZS",
-        "createdAt": 1504095567183,
-        "updatedAt": 1504095567183,
-        "rating": 5,
-        "comments": "I've been to Korea before and many other Korean BBQ places. We had the regular pork belly and a beef (forgot which cut) and a seafood tofu soup. Two meat and a soup was just prefect for the two of us. We could have done one meat and one soup. The portions of the meat are great! The beef was juicy, tender and so good. The sides were excellent. "
-      },
-      {
         "id": 9,
         "restaurant_id": 3,
         "name": "Emily",
@@ -462,13 +453,13 @@
         "comments": "For a Michelin star restaurant, it's fairly priced and the food is fairly good. Started with a strawberry margarita which was good in flavor but not much alcohol. Had the chicken enchiladas with salsa verde and it was really good. Great balance in flavor and a good portion. Extra tasty with their hot sauces. My wife had the lamb but it was a bit too salty for our taste. Although, it was cooked very well and fell off the bone. The highlight of the night was the tres leches cake. Probably the best I've ever had to be honest. Not too sweet and very milky. Overall, one of my top 3 favorite Mexican in NY."
       },
       {
-        "name": "aaa",
+        "name": "ddd",
         "rating": "1",
         "comments": "aaa",
         "restaurant_id": 2,
-        "createdAt": 1590172074217,
-        "updatedAt": 1590172074217,
-        "id": 1025
+        "createdAt": 1590611461601,
+        "updatedAt": "2020-05-27T23:05:44.840Z",
+        "id": 1590611461601
       }
     ]
   },
@@ -524,7 +515,7 @@
       "id": 10
     },
     "reviews": {
-      "id": 1025
+      "id": 1590611504036
     }
   }
 }
