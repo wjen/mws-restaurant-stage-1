@@ -209,6 +209,9 @@ export default class DBHelper {
     })
   }
 
+/**
+* Grab the original review from the db and replace with edited review
+*/
   static editReview(formData, editing) {
     return dbPromise.then(db => {
       let tx = db.transaction('reviews');
@@ -226,9 +229,6 @@ export default class DBHelper {
   }
 
   static submitReview(formData, editing) {
-    // Block any more clicks on the submit button until the callback
-    // const btn = document.getElementById("submit-form-btn");
-    // btn.onclick = null;
     console.log(editing);
     const method = editing ? "PUT" : "POST";
     const url = editing ? `${DBHelper.DATABASE_REVIEWS_URL}/${editing.id}` : DBHelper.DATABASE_REVIEWS_URL;

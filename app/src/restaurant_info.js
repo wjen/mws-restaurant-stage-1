@@ -266,6 +266,8 @@ const submitReview = () => {
     resetFormValues();
   }).catch(error => {
     // If no network, fallback to get reviews from db
+    let alertMsg = editing ? 'Edited Review' : 'Created Review';
+    alert(alertMsg);
     console.log(`${error}: reloading reviews from db`);
     const section = document.getElementById('reviews-container');
     dbPromise.then(db => {
@@ -277,6 +279,7 @@ const submitReview = () => {
     }).then(reviews => {
       console.log(reviews);
       fillReviewsHTML(reviews);
+      resetFormValues();
     })
 
   });
