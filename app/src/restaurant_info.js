@@ -247,6 +247,7 @@ const submitReview = () => {
     formData.updatedAt = Date.now();
   } else {
     formData.id = Date.now();
+    formData.restaurant_id = Number(getParameterByName('id'));
   }
 
   DBHelper.submitReview(formData, editing).then( result => {
@@ -259,7 +260,7 @@ const submitReview = () => {
       parentElem.replaceChild(newReviewElem, oldReviewElem);
     } else {
       const ul = document.getElementById('reviews-list');
-      ul.appendChild(new_review_block);
+      ul.appendChild(newReviewElem);
     }
     var element = document.getElementById(`review-li-${result.id}`);
     element.scrollIntoView(true);

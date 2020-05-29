@@ -14,7 +14,7 @@ html{
     color: #333;
 }
 
-body,td,th,p{
+body,td,th,p, textarea{
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 1em;
 	color: #333;
@@ -411,6 +411,7 @@ ul {
     width: 48px;
     height: 48px;
     cursor: pointer;
+    background: white;
 }
 
 input, textarea {
