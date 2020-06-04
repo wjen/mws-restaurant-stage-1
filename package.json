@@ -7,7 +7,8 @@
     "dev": "webpack-dev-server --mode development --open",
     "build": "webpack",
     "start": "node server.js",
-    "postinstall": "webpack -p"
+    "postinstall": "webpack -p",
+    "nodemon": "nodemon --watch webpack.config.js --watch server.js && webpack-dev-server --mode development"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
     "copy-webpack-plugin": "^5.1.1",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^6.1.0",
+    "html-webpack-plugin": "^4.3.0",
     "image-webpack-loader": "^6.0.0",
     "imagemin-gifsicle": "^7.0.0",
     "imagemin-jpegtran": "^6.0.0",

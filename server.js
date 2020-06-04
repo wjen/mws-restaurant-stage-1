@@ -1,22 +1,24 @@
 const express = require('express');
 const path = require('path');
+const port = 8080;
 const app = express();
-const idb = require('idb');
-// app.use(favicon(__dirname + '/public/favicon.png'));
 // the __dirname is the current directory from where the script is running
-app.use(express.static('app'));
+app.use(express.static(path.join(__dirname, 'dist')));
+
+
+// app.get('/api/posts', (req, res) => {
+//   res.send([{ id: 1}]);
+// })
 
 // send the user to index html page inspite of the url
-app.get('/', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'app/index.html'));
-});
-app.set('port', (process.env.PORT || 8000));
-app.listen(app.get('port'), function() {
-  console.log('Listening on port ' + app.get('port') + '...');
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(path.resolve(__dirname, 'dist/index.html'));
+// });
+// app.set('port', (process.env.PORT || 8000));
+app.listen(port);
+console.log('Listening on port ' + port + '...');
 
 // let main_directory = __dirname + '/client/';
-// let css_directory = main_directory + '/css/';
 // let js_directory = main_directory + '/js/';
 // let img_directory = main_directory + '/img/';
 
@@ -26,9 +28,6 @@ app.listen(app.get('port'), function() {
 // app.use('/img', express.static( img_directory ));
 
 
-
 // app.get('/', function(request, response){
 //   return response.render('index.html');
 // });
-
-

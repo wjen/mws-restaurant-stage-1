@@ -58,6 +58,7 @@ self.addEventListener('install', event => {
         './app.bundle.js',
         './restaurant.bundle.js',
         './img/rr_icon.png',
+        './css/styles.css'
       ]).catch(error => {
         console.log('error setting up install event for sw');
       });

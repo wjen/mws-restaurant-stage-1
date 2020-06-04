@@ -4,6 +4,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 import imageminMozjpeg from 'imagemin-mozjpeg';
 const Dotenv = require('dotenv-webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -30,9 +31,6 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin([
       {
-        from: path.resolve(__dirname, 'app/html'),
-      },
-      {
         from: path.resolve(__dirname, 'app/css'),
         to: path.resolve(__dirname, 'dist/css')
       },
@@ -52,7 +50,19 @@ module.exports = {
       ]
     }),
     //webpack's version of dot.env
-    new Dotenv()
+    new Dotenv(),
+    new HtmlWebpackPlugin({
+      inject: false,
+      chunks: ['app', 'serviceworker'],
+      template: __dirname + "/app/html/index.html",
+    }),
+    new HtmlWebpackPlugin({
+      inject: false,
+      chunks: ['restaurant', 'serviceworker'],
+      template: __dirname + "/app/html/restaurant.html",
+      filename: 'restaurant.html'
+    }),
+
   ],
   module: {
     rules: [
