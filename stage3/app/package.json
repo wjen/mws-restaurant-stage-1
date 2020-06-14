@@ -6,7 +6,6 @@
     "dev": "webpack-dev-server --mode development --open",
     "build": "webpack",
     "start": "node server.js",
-    "postinstall": "webpack -p",
     "nodemon": "nodemon --watch webpack.config.js --watch server.js && webpack-dev-server --mode development"
   },
   "repository": {
