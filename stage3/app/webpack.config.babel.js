@@ -9,9 +9,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   mode: 'development',
   entry: {
-     app: './src/main.js',
-     restaurant: './src/restaurant_info.js',
-     serviceworker: './sw.js'
+     app: './client/js/main.js',
+     restaurant: './client/js/restaurant_info.js',
+     serviceworker: './client/sw.js'
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -31,11 +31,11 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin([
       {
-        from: path.resolve(__dirname, 'css'),
+        from: path.resolve(__dirname, 'client/css'),
         to: path.resolve(__dirname, 'dist/css')
       },
       {
-        from: path.resolve(__dirname, 'img'),
+        from: path.resolve(__dirname, 'client/img'),
         to: path.resolve(__dirname, 'dist/img')
       },
     ]),
@@ -54,12 +54,12 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: false,
       chunks: ['app', 'serviceworker'],
-      template: __dirname + "/html/index.html",
+      template: __dirname + "/client/html/index.html",
     }),
     new HtmlWebpackPlugin({
       inject: false,
       chunks: ['restaurant', 'serviceworker'],
-      template: __dirname + "/html/restaurant.html",
+      template: __dirname + "/client/html/restaurant.html",
       filename: 'restaurant.html'
     }),
 
