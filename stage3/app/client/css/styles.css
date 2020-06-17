@@ -84,7 +84,6 @@ button:focus {
               0 3px 1px -2px rgba(0, 0, 0, .2),
               0 1px 5px 0 rgba(0, 0, 0, .12);
 }
-
 /* ====================== Navigation ====================== */
 header {
     width: 100%;
@@ -106,11 +105,9 @@ ul {
  font-size: 1em;
  margin-bottom: 0;
 }
-
 .navigation li {
   height: 100%;
 }
-
 .navigation .navigation__title {
  flex-grow: 1;
 }
@@ -138,25 +135,21 @@ ul {
     margin: 0;
     width: 100%;
 }
-
 /* Display list items side by side */
 #breadcrumb li {
     display: inline;
 }
-
 /* Add a slash symbol (/) before/behind each list item */
 #breadcrumb li+li:before {
     padding: 8px;
     color: black;
     content: "/\00a0";
 }
-
 /* Add a color to all links inside the list */
 #breadcrumb li a {
     color: #0275d8;
     text-decoration: none;
 }
-
 /* Add a color on mouse-over */
 #breadcrumb li a:hover {
     color: #01447e;
@@ -196,7 +189,6 @@ ul {
 .filter-label {
   display: none;
 }
-
 .filter-section {
   width: 100%;
 }
@@ -366,7 +358,6 @@ ul {
   color: #666;
   font-size: 1em;
 }
-
 #create-edit-review-form {
   width: 100%;
 }
@@ -376,7 +367,6 @@ ul {
   text-align: center;
   font-size: 1rem;
 }
-
 #create-edit-review-form input, #create-edit-review-form textarea {
   display: block;
   margin: 0 auto;
@@ -384,7 +374,6 @@ ul {
   padding: 5px;
   width: 50%;
 }
-
 .form-button {
   display:block;
   color: white;
@@ -394,16 +383,13 @@ ul {
   margin: 10px;
   text-align: center;
 }
-
 .form-submit {
   background: orange;
 }
-
 .form-cancel {
   display: none;
   background: red;
 }
-
 .review-btn {
     margin: 0 16px 0 0;
     padding: 0 10px 0 0;
@@ -413,7 +399,6 @@ ul {
     cursor: pointer;
     background: white;
 }
-
 input, textarea {
   font-size: 1em;
 }
@@ -434,7 +419,6 @@ input, textarea {
     max-width: 45%;
   }
 }
-
 @media screen and (max-width: 670px) {
   header {
     /*min-height: 50px;*/
@@ -451,7 +435,6 @@ input, textarea {
     height: 30px;
   }
 }
-
 @media screen and (max-width: 540px) {
 
   .navigation h1 a{
