@@ -319,7 +319,6 @@ const setEditing = (review) => {
   goToBottom();
 }
 
-
 const deleteReview = (review) => {
   let ask = window.confirm(`delete ${review.name}'s review?`);
   if (ask === false) { return }

@@ -82,7 +82,6 @@ self.addEventListener('activate', event => {
   );
 });
 
-
 self.addEventListener('fetch', event => {
   let checkUrl = new URL(event.request.url);
   if (checkUrl.port === "1337") {

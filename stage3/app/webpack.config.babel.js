@@ -9,9 +9,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   mode: 'development',
   entry: {
-     app: './client/js/main.js',
-     restaurant: './client/js/restaurant_info.js',
-     serviceworker: './client/sw.js'
+    app: './client/js/main.js',
+    restaurant: './client/js/restaurant_info.js',
+    serviceworker: './client/sw.js'
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -24,7 +24,7 @@ module.exports = {
     compress: true,
     writeToDisk: true,
   },
-   node: {
+  node: {
     net: 'empty',
     fs: 'empty'
   },
@@ -62,7 +62,6 @@ module.exports = {
       template: __dirname + "/client/html/restaurant.html",
       filename: 'restaurant.html'
     }),
-
   ],
   module: {
     rules: [
@@ -79,10 +78,10 @@ module.exports = {
         ]
       },
       {
-         test: /\.(png|svg|jpg|gif)$/,
-         use: [
-           'file-loader',
-         ],
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          'file-loader',
+        ],
       }
     ]
   }

@@ -1,48 +1,22 @@
-/**
- * Common database helper functions.
- */
 import { openDB, deleteDB, wrap, unwrap } from 'idb';
 import {dbPromise} from '../sw.js';
 
-// const dbPromise = openDB('rr-db', 3, {
-//   upgrade(db, oldVersion) {
-//     switch (oldVersion) {
-//       case 0:
-//         const store = db.createObjectStore('restaurants', { keyPath: 'id', });
-//         store.createIndex('id', 'id');
-//       case 1:
-//         const reviewsStore = db.createObjectStore('reviews', {
-//           keyPath: 'id',
-//         });
-//         reviewsStore.createIndex("restaurant_id", "restaurant_id");
-//       case 2:
-//         const pendingStore = db.createObjectStore('pending', {
-//           keyPath: 'id',
-//           autoIncrement: true
-//         })
-//     }
-//   }
-// });
-
 export default class DBHelper {
 
-  /**
-   * Database URL.
-   * Change this to restaurants.json file location on your server.
-   */
   static get DATABASE_URL() {
-    const port = 1337// Change this to your server port
-    return process.env.DATABASE_URL || `http://localhost:${port}/restaurants`;
+    const port = 1337 // Change this to your server port
+    return process.env.DATABASE_URL || `https://mwsbackend.herokuapp.com/restaurants`;
   }
 
   static get DATABASE_REVIEWS_URL() {
     const port = 1337 // Change this to your server port
-    return `http://localhost:${port}/reviews`;
+    return `https://mwsbackend.herokuapp.com/reviews`;
   }
 
   /**
    * Fetch all restaurants.
    */
+
   static fetchRestaurants(callback) {
     fetch(DBHelper.DATABASE_URL).then(function(response) {
       response.json().then(function(restaurants) {
@@ -350,7 +324,7 @@ export default class DBHelper {
   }
 
   static syncRestaurant(restaurant) {
-       let url = `http://localhost:1337/restaurants/${restaurant.id}/?is_favorite=${restaurant.is_favorite}`;
+       let url = `https://mwsbackend.herokuapp.com/restaurants/${restaurant.id}/?is_favorite=${restaurant.is_favorite}`;
        let method = 'PUT';
        DBHelper.addPendingRequestToQue(url, method).catch(error => {
          console.log('error updating restaurant backend data...', error, restaurant);
@@ -403,7 +377,6 @@ export default class DBHelper {
       console.log('error deleting review: ', error);
     });
   }
-
 
   static deleteReview(review_id) {
     const url = `${DBHelper.DATABASE_REVIEWS_URL}/${review_id}`;
