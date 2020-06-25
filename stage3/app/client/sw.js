@@ -6,7 +6,7 @@ const allCaches = [
   IMAGES_CACHE
 ];
 import { openDB, deleteDB, wrap, unwrap } from 'idb';
-export {dbPromise}
+export { dbPromise }
 
 const dbPromise = openDB('rr-db', 3, {
   upgrade(db, oldVersion) {
@@ -29,23 +29,23 @@ const dbPromise = openDB('rr-db', 3, {
   }
 });
 
- const getRestaurants = (event) => {
-    return new Promise(function(resolve, reject) {
-      fetch(event.request)
+const getRestaurants = (event) => {
+  return new Promise(function (resolve, reject) {
+    fetch(event.request)
       .then(resp => resp.json())
       .then(json => { resolve(json); })
       .catch(error => {
         console.log(error);
         reject(error);
       });
-    });
-  }
+  });
+}
 
 function isImageURL(url) {
   let imgTypes = ["png", "jpg", "jpeg", "svg", "gif"];
   let isImage = false;
   for (let type of imgTypes) {
-    if (url.endsWith(type)) { isImage = true; break};
+    if (url.endsWith(type)) { isImage = true; break };
   }
   return isImage;
 }
@@ -73,7 +73,7 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.filter(cacheName => {
           return cacheName.startsWith('restaurant-') &&
-                 cacheName != STATIC_CACHE;
+            cacheName != STATIC_CACHE;
         }).map(cacheName => {
           return caches.delete(cacheName);
         })
@@ -94,13 +94,13 @@ self.addEventListener('fetch', event => {
 
 const handleAJAXEvent = (event, id) => {
   // Only use for caching for Get events
-  if(event.request.method !== "GET") {
+  if (event.request.method !== "GET") {
     console.log(event.request);
     console.log(event);
     event.respondWith(
       fetch(event.request)
     )
-  } else if(event.request.url.indexOf("restaurants") > -1) {
+  } else if (event.request.url.indexOf("restaurants") > -1) {
     handleRestaurantEvents(event);
   } else {
     console.log('starting handling from reviews event')
@@ -110,36 +110,36 @@ const handleAJAXEvent = (event, id) => {
 
 const handleRestaurantEvents = (event) => {
   event.respondWith(
-      dbPromise.then( db => {
-        return db
-          .transaction('restaurants')
-          .objectStore('restaurants')
-          .getAll();
-      }).then(data => {
-        console.log('responding from handlerestaurantevents from serviceworker');
-        return ((data.length && data) || getRestaurants(event)
-          .then( restaurants => {
-            console.log('fetched now storing');
-            return dbPromise.then(db => {
-              let tx = db.transaction('restaurants', 'readwrite');
-              let store = tx.objectStore('restaurants');
-              restaurants.forEach(function(restaurant){
-                store.put(restaurant);
-              });
-              return tx.done;
-            }).then( () => {
-              console.log('stored restaurants, now returning');
-              return restaurants;
+    dbPromise.then(db => {
+      return db
+        .transaction('restaurants')
+        .objectStore('restaurants')
+        .getAll();
+    }).then(data => {
+      console.log('responding from handlerestaurantevents from serviceworker');
+      return ((data.length && data) || getRestaurants(event)
+        .then(restaurants => {
+          console.log('fetched now storing');
+          return dbPromise.then(db => {
+            let tx = db.transaction('restaurants', 'readwrite');
+            let store = tx.objectStore('restaurants');
+            restaurants.forEach(function (restaurant) {
+              store.put(restaurant);
             });
-          })
-        )
-      })
-        .then(finalResponse => {
-          console.log(finalResponse);
-          return new Response(JSON.stringify(finalResponse));
-        }).catch(error => {
-          return new Response("Error fetching data", {status: 500});
+            return tx.done;
+          }).then(() => {
+            console.log('stored restaurants, now returning');
+            return restaurants;
+          });
+        })
+      )
     })
+      .then(finalResponse => {
+        console.log(finalResponse);
+        return new Response(JSON.stringify(finalResponse));
+      }).catch(error => {
+        return new Response("Error fetching data", { status: 500 });
+      })
   )
 }
 
@@ -151,30 +151,30 @@ const handleReviewsEvents = (event, id) => {
         .objectStore('reviews')
         .index("restaurant_id")
         .getAll(id);
-    }).then( data => {
+    }).then(data => {
       console.log('serviceworker handle reviews');
       console.log(data);
       return (data.length && data) || fetch(event.request)
         .then(fetchResponse => {
           return fetchResponse.json();
         })
-        .then( reviews => {
+        .then(reviews => {
           console.log('using serviceworker fetch');
           console.log('starting to store reviews');
           return dbPromise.then(db => {
             let tx = db.transaction('reviews', 'readwrite')
             let store = tx.objectStore('reviews');
-            reviews.forEach(function(review) {
+            reviews.forEach(function (review) {
               store.put(review);
             });
             return tx.done;
           })
-          .then( () => reviews)
+            .then(() => reviews)
         })
     }).then(finalResponse => {
       return new Response(JSON.stringify(finalResponse));
     }).catch(error => {
-      return new Response("Error fetching data", {status: 500});
+      return new Response("Error fetching data", { status: 500 });
     }))
 }
 
@@ -185,7 +185,7 @@ const handleNonAJAXEvent = (event) => {
   event.respondWith(
     caches.match(event.request).then(response => {
       return response || fetch(event.request).then(fetchResponse => {
-        let useCache = isImageURL(event.request.url) ?  IMAGES_CACHE : STATIC_CACHE;
+        let useCache = isImageURL(event.request.url) ? IMAGES_CACHE : STATIC_CACHE;
         return caches
           .open(useCache)
           .then(cache => {
@@ -206,7 +206,7 @@ const handleNonAJAXEvent = (event) => {
 }
 
 const update = (request) => {
-  let useCache = isImageURL(request.url) ?  IMAGES_CACHE : STATIC_CACHE;
+  let useCache = isImageURL(request.url) ? IMAGES_CACHE : STATIC_CACHE;
   return caches.open(useCache).then(cache => {
     return fetch(request).then(response => {
       return cache.put(request, response);

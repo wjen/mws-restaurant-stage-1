@@ -4,7 +4,7 @@ let restaurant;
 let submitBtn;
 var newMap;
 let editing = false;
-import {dbPromise} from '../sw.js';
+import { dbPromise } from '../sw.js';
 
 /**
  * Initialize map as soon as the page is loaded.
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
   //check for pending reviews on page load and pop
   DBHelper.nextPending();
- });
+});
 
 /**
  * Initialize leaflet map
@@ -205,7 +205,7 @@ const createReviewHTML = (review) => {
 /**
  * Add restaurant name to the breadcrumb navigation menu
  */
-const fillBreadcrumb = (restaurant=self.restaurant) => {
+const fillBreadcrumb = (restaurant = self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
@@ -221,7 +221,7 @@ const getParameterByName = (name, url) => {
   name = name.replace(/[\[\]]/g, '\\$&');
   console.log(url);
   const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
-  results = regex.exec(url);
+    results = regex.exec(url);
   console.log(results);
   if (!results[2]) return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
@@ -230,15 +230,15 @@ const getParameterByName = (name, url) => {
 const submitReview = () => {
   console.log(editing);
   let formData = getFormValues();
-  if(!/[a-zA-Z]{2,}$/gi.test(formData.name)) {
+  if (!/[a-zA-Z]{2,}$/gi.test(formData.name)) {
     alert('name input must be letters only, minimum of 2 characters');
     return;
   }
-  if(!/[1-5]{1}$/gi.test(formData.rating)) {
+  if (!/[1-5]{1}$/gi.test(formData.rating)) {
     alert('rating input must be a number, 1-5');
     return;
   }
-  if(formData.comments.length < 3) {
+  if (formData.comments.length < 3) {
     alert('comments input must be minimum of 3 characters');
     return;
   }
@@ -250,7 +250,7 @@ const submitReview = () => {
     formData.restaurant_id = Number(getParameterByName('id'));
   }
 
-  DBHelper.submitReview(formData, editing).then( result => {
+  DBHelper.submitReview(formData, editing).then(result => {
     let alertMsg = editing ? 'Edited Review' : 'Created Review';
     alert(alertMsg);
     let newReviewElem = createReviewHTML(result);
@@ -311,7 +311,7 @@ const setEditing = (review) => {
   editing = review;
   let cancelEditingBtn = document.getElementById('cancel-form-btn');
   cancelEditingBtn.style.display = 'block';
-  cancelEditingBtn.addEventListener('click', () => cancelEditing() );
+  cancelEditingBtn.addEventListener('click', () => cancelEditing());
   document.getElementById('name').value = review.name;
   document.getElementById('rating').value = review.rating;
   document.getElementById('review-field').value = review.comments;
