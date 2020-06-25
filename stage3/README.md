@@ -30,7 +30,7 @@ Deployed on heroku: [https://rmw-mobile-web-specialist.herokuapp.com/](https://f
 5. `# node server`
 6. In the app folder run:
 7. `# npm install`.
-8. `# gulp serve`.
+8. `# npm start`.
 
 ##### You should now have access to your API server environment
 
