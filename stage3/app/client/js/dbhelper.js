@@ -1,6 +1,7 @@
 import { openDB, deleteDB, wrap, unwrap } from 'idb';
 import { dbPromise } from '../sw.js';
 
+// Create DBHelper Class
 export default class DBHelper {
   static get DATABASE_URL() {
     const port = 1337; // Change this to your server port
@@ -14,10 +15,7 @@ export default class DBHelper {
     return `https://mwsbackend.herokuapp.com/reviews`;
   }
 
-  /**
-   * Fetch all restaurants.
-   */
-
+  // Fetch all restaurants.
   static fetchRestaurants(callback) {
     fetch(DBHelper.DATABASE_URL).then(function (response) {
       response.json().then(function (restaurants) {
@@ -59,9 +57,7 @@ export default class DBHelper {
     });
   }
 
-  /**
-   * Fetch restaurants by a cuisine type with proper error handling.
-   */
+  // Fetch restaurants by a cuisine type with proper error handling.
   static fetchRestaurantByCuisine(cuisine, callback) {
     // Fetch all restaurants  with proper error handling
     DBHelper.fetchRestaurants((error, restaurants) => {
@@ -75,9 +71,8 @@ export default class DBHelper {
     });
   }
 
-  /**
-   * Fetch restaurants by a neighborhood with proper error handling.
-   */
+  //  Fetch restaurants by a neighborhood with proper error handling.
+
   static fetchRestaurantByNeighborhood(neighborhood, callback) {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
@@ -93,9 +88,8 @@ export default class DBHelper {
     });
   }
 
-  /**
-   * Fetch restaurants by a cuisine and a neighborhood with proper error handling.
-   */
+  // Fetch restaurants by a cuisine and a neighborhood with proper error handling.
+
   static fetchRestaurantByCuisineAndNeighborhood(
     cuisine,
     neighborhood,
@@ -120,9 +114,7 @@ export default class DBHelper {
     });
   }
 
-  /**
-   * Fetch all neighborhoods with proper error handling.
-   */
+  // Fetch all neighborhoods with proper error handling.
   static fetchNeighborhoods(callback) {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
@@ -142,9 +134,7 @@ export default class DBHelper {
     });
   }
 
-  /**
-   * Fetch all cuisines with proper error handling.
-   */
+  // Fetch all cuisines with proper error handling.
   static fetchCuisines(callback) {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
@@ -162,16 +152,12 @@ export default class DBHelper {
     });
   }
 
-  /**
-   * Restaurant page URL.
-   */
+  // Restaurant page URL.
   static urlForRestaurant(restaurant) {
     return `/restaurant.html?id=${restaurant.id}`;
   }
 
-  /**
-   * Restaurant image URL.
-   */
+  // Restaurant image URL.
   static imageUrlForRestaurant(restaurant) {
     if (!restaurant.photograph) {
       return `/img/${restaurant.id}.jpg`;
@@ -179,9 +165,7 @@ export default class DBHelper {
     return `/img/${restaurant.photograph}.jpg`;
   }
 
-  /**
-   * Map marker for a restaurant.
-   */
+  // Map marker for a restaurant.
   static mapMarkerForRestaurant(restaurant, map) {
     // https://leafletjs.com/reference-1.3.0.html#marker
     const marker = new L.marker(
@@ -207,9 +191,7 @@ export default class DBHelper {
     });
   }
 
-  /**
-   * Grab the original review from the db and replace with edited review
-   */
+  // Grab the original review from the db and replace with edited review
   static editReview(formData, editing) {
     return dbPromise
       .then((db) => {
@@ -228,8 +210,8 @@ export default class DBHelper {
       });
   }
 
+  // Update review in the cache, sort for editing
   static submitReview(formData, editing) {
-    console.log(editing);
     const method = editing ? 'PUT' : 'POST';
     const url = editing
       ? `${DBHelper.DATABASE_REVIEWS_URL}/${editing.id}`
@@ -242,6 +224,7 @@ export default class DBHelper {
     return DBHelper.addPendingRequestToQue(url, method, formData);
   }
 
+  // Add new/updated review to que
   static addPendingRequestToQue(url, method, formData) {
     //open database and add request details to the pending store
     return new Promise((resolve, reject) => {
@@ -275,11 +258,9 @@ export default class DBHelper {
   static nextPending(callback) {
     DBHelper.attemptCommitPending(DBHelper.nextPending)
       .then((j) => {
-        console.log(j);
         callback(null, j);
       })
       .catch((error) => {
-        console.log(error);
         if (callback) {
           callback(error);
         }

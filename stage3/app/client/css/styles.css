@@ -156,11 +156,17 @@ ul {
     text-decoration: underline;
 }
 /* ====================== Map ====================== */
-#map {
-  height: 400px;
+#mapid {
+  height: 350px;
   width: 100%;
   background-color: #ccc;
 }
+#mapid__restaurant {
+  height: 100%;
+  width: 100%;
+  background-color: #ccc;
+}
+
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
   width: 100%;
